@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:dnd_character/app/widgets/attributes_display_widget.dart';
 import 'package:dnd_character/app/widgets/health_bar_widget.dart';
 import 'package:dnd_character/app/widgets/experience_bar_widget.dart';
+import 'package:dnd_character/app/widgets/race_and_class_widget.dart';
 
 class CharacterDisplayScreen extends StatelessWidget {
   CharacterDisplayScreen({super.key});
@@ -30,23 +31,11 @@ class CharacterDisplayScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 10),
-                Text(
-                  '种族: ${character.race}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Text(
-                  '职业: ${character.characterClass}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Text(
-                  '背景: ${character.background}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Text(
-                  '阵营: ${character.alignment}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 20),
+                CharacterDetailsWidget(
+                    currentRace: character.race,
+                    currentClass: character.characterClass,
+                    currentBackground: character.background,
+                    currentAlignment: character.alignment),
                 Text(
                   '等级: ${character.level}',
                   style: Theme.of(context).textTheme.titleMedium,
