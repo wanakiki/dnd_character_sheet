@@ -138,6 +138,7 @@ class CharacterDetailsWidget extends StatelessWidget {
                 title,
                 style: const TextStyle(fontSize: 18.0),
               ),
+              SizedBox(width: 8.0),
               Text(
                 currentValue,
                 style: const TextStyle(

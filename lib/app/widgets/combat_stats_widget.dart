@@ -21,7 +21,6 @@ class CombatStatsWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildStatText('护甲等级 (AC)', armorClass),
             SizedBox(width: 8.0),
@@ -42,6 +41,7 @@ class CombatStatsWidget extends StatelessWidget {
           label,
           style: TextStyle(fontSize: 18.0),
         ),
+        SizedBox(width: 8.0),
         Text(
           value.toString(),
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),

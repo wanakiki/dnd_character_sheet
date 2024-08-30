@@ -65,13 +65,7 @@ class CharacterDisplayScreen extends StatelessWidget {
                   '属性:',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                Row(
-                  children: [
-                    AttributesDisplay(attributes: character.attributes),
-                    const SizedBox(width: 20),
-                    CoinDisplayWidget(coin: character.coin),
-                  ],
-                ),
+                AttributesDisplay(attributes: character.attributes),
                 const SizedBox(height: 20),
                 const SizedBox(height: 20),
                 if (character.avatarUrl.isNotEmpty)
