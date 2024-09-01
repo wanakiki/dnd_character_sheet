@@ -34,7 +34,6 @@ class ExperienceBar extends StatelessWidget {
   }
 
   int _experienceForNextLevel(int level) {
-    // Experience points required for each level
     const List<int> xpThresholds = [
       300,
       900,
@@ -78,7 +77,7 @@ class ExperienceBar extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog without action
+                Navigator.of(context).pop();
               },
               child: Text('取消'),
             ),
@@ -86,8 +85,7 @@ class ExperienceBar extends StatelessWidget {
               onPressed: () {
                 int deltaXP = int.tryParse(xpController.text) ?? 0;
                 _updateExperience(context, deltaXP);
-                Navigator.of(context)
-                    .pop(); // Close the dialog after updating XP
+                Navigator.of(context).pop();
               },
               child: Text('确认'),
             ),
@@ -103,7 +101,19 @@ class ExperienceBar extends StatelessWidget {
     int newExperience = currentExperience + deltaXP;
     int newLevel = currentLevel;
 
-    while (newExperience >= _experienceForNextLevel(newLevel)) {
+    // 检查经验值是否低于0
+    if (newExperience < 0) {
+      newExperience = 0;
+    }
+
+    // 检查经验值是否超过最大值
+    int maxExperience = _experienceForNextLevel(20);
+    if (newExperience > maxExperience) {
+      newExperience = maxExperience;
+    }
+
+    while (
+        newExperience >= _experienceForNextLevel(newLevel) && newLevel < 20) {
       newLevel++;
     }
 
