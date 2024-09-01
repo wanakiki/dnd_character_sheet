@@ -18,7 +18,6 @@ class CharacterDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // D&D 5E Options
     final List<String> raceOptions = [
       '人类',
       '精灵',
@@ -65,148 +64,67 @@ class CharacterDetailsWidget extends StatelessWidget {
       '混乱邪恶'
     ];
 
-    return Row(
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 4.0,
       children: [
-        _buildAttributeCard(
-          context,
-          '种族',
-          currentRace,
-          raceOptions,
-          (newValue) => _updateCharacterAttribute(
-            context,
-            race: newValue,
-          ),
-        ),
-        _buildAttributeCard(
-          context,
-          '职业',
-          currentClass,
-          classOptions,
-          (newValue) => _updateCharacterAttribute(
-            context,
-            characterClass: newValue,
-          ),
-        ),
-        _buildAttributeCard(
-          context,
-          '背景',
-          currentBackground,
-          backgroundOptions,
-          (newValue) => _updateCharacterAttribute(
-            context,
-            background: newValue,
-          ),
-        ),
-        _buildAttributeCard(
-          context,
-          '阵营',
-          currentAlignment,
-          alignmentOptions,
-          (newValue) => _updateCharacterAttribute(
-            context,
-            alignment: newValue,
-          ),
-        ),
+        _buildAttributeChip(context, '种族', currentRace, raceOptions),
+        _buildAttributeChip(context, '职业', currentClass, classOptions),
+        _buildAttributeChip(
+            context, '背景', currentBackground, backgroundOptions),
+        _buildAttributeChip(context, '阵营', currentAlignment, alignmentOptions),
       ],
     );
   }
 
-  Widget _buildAttributeCard(
-    BuildContext context,
-    String title,
-    String currentValue,
-    List<String> options,
-    ValueChanged<String?> onChanged,
-  ) {
-    return Card(
-      elevation: 4.0,
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      child: InkWell(
-        onTap: () => _showOptionsDialog(
-          context,
-          title,
-          currentValue,
-          options,
-          onChanged,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontSize: 18.0),
-              ),
-              SizedBox(width: 8.0),
-              Text(
-                currentValue,
-                style: const TextStyle(
-                    fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
+  Widget _buildAttributeChip(BuildContext context, String title,
+      String currentValue, List<String> options) {
+    return ActionChip(
+      label: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Text(title, style: Theme.of(context).textTheme.titleSmall),
+          Text(currentValue, style: Theme.of(context).textTheme.bodySmall),
+        ],
       ),
+      onPressed: () =>
+          _showOptionsDialog(context, title, currentValue, options),
     );
   }
 
-  void _showOptionsDialog(
-    BuildContext context,
-    String title,
-    String currentValue,
-    List<String> options,
-    ValueChanged<String?> onChanged,
-  ) {
+  void _showOptionsDialog(BuildContext context, String title,
+      String currentValue, List<String> options) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('选择 $title'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: options.map((String value) {
-                return ListTile(
-                  title: Text(value),
-                  onTap: () {
-                    onChanged(value);
-                    Navigator.of(context).pop();
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: const Text('关闭'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+        return SimpleDialog(
+          title:
+              Text('选择$title', style: Theme.of(context).textTheme.titleLarge),
+          children: options
+              .map((String value) => SimpleDialogOption(
+                    onPressed: () {
+                      _updateCharacterAttribute(context, title, value);
+                      Navigator.pop(context);
+                    },
+                    child: Text(value,
+                        style: Theme.of(context).textTheme.bodyMedium),
+                  ))
+              .toList(),
         );
       },
     );
   }
 
   void _updateCharacterAttribute(
-    BuildContext context, {
-    String? race,
-    String? characterClass,
-    String? background,
-    String? alignment,
-  }) {
-    CharacterManager characterManager =
+      BuildContext context, String attribute, String value) {
+    final characterManager =
         Provider.of<CharacterManager>(context, listen: false);
-
-    characterManager.updateCharacter(
-      characterManager.character.copyWith(
-        race: race ?? characterManager.character.race,
-        characterClass:
-            characterClass ?? characterManager.character.characterClass,
-        background: background ?? characterManager.character.background,
-        alignment: alignment ?? characterManager.character.alignment,
-      ),
+    final updatedCharacter = characterManager.character.copyWith(
+      race: attribute == '种族' ? value : null,
+      characterClass: attribute == '职业' ? value : null,
+      background: attribute == '背景' ? value : null,
+      alignment: attribute == '阵营' ? value : null,
     );
+    characterManager.updateCharacter(updatedCharacter);
   }
 }

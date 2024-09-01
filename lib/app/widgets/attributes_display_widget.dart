@@ -7,51 +7,47 @@ class AttributeCard extends StatelessWidget {
   final IconData icon;
   final int value;
 
-  const AttributeCard(
-      {required this.name, required this.icon, required this.value});
+  const AttributeCard({
+    Key? key,
+    required this.name,
+    required this.icon,
+    required this.value,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final int modifier = (value - 10) ~/ 2; // 骰子加成点数的计算
+    final int modifier = (value - 10) ~/ 2;
+    final textTheme = Theme.of(context).textTheme;
 
-    return SizedBox(
-      height: 100, // Add the desired height here
-      child: Card(
-        elevation: 4.0,
-        margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-        child: InkWell(
-          onTap: () => _showEditDialog(context),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(icon, size: 28.0),
-                    const SizedBox(height: 8.0),
-                    Text(
-                      name,
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 10.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      '属性值: $value',
-                      style: const TextStyle(fontSize: 14.0),
-                    ),
-                    Text(
-                      '加成: ${modifier >= 0 ? '+' : ''}$modifier',
-                      style: const TextStyle(fontSize: 20.0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+    return Card(
+      elevation: 2.0,
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+      child: InkWell(
+        onTap: () => _showEditDialog(context),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(icon, size: 16.0, color: Theme.of(context).primaryColor),
+                  const SizedBox(width: 4.0),
+                  Text(name, style: textTheme.bodySmall),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('$value',
+                      style: textTheme.titleSmall
+                          ?.copyWith(fontWeight: FontWeight.bold)),
+                  Text('${modifier >= 0 ? '+' : ''}$modifier',
+                      style: textTheme.bodySmall),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -69,26 +65,21 @@ class AttributeCard extends StatelessWidget {
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
                     icon: const Icon(Icons.remove),
                     onPressed: () {
                       if (currentValue > 0) {
-                        setState(() {
-                          currentValue--;
-                        });
+                        setState(() => currentValue--);
                       }
                     },
                   ),
-                  Text('$currentValue'),
+                  Text('$currentValue',
+                      style: Theme.of(context).textTheme.headlineSmall),
                   IconButton(
                     icon: const Icon(Icons.add),
-                    onPressed: () {
-                      setState(() {
-                        currentValue++;
-                      });
-                    },
+                    onPressed: () => setState(() => currentValue++),
                   ),
                 ],
               );
@@ -96,12 +87,10 @@ class AttributeCard extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
               child: const Text('取消'),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
                 Provider.of<CharacterManager>(context, listen: false)
                     .updateAttribute(name, currentValue);
@@ -119,18 +108,29 @@ class AttributeCard extends StatelessWidget {
 class AttributesDisplay extends StatelessWidget {
   final Map<String, int> attributes;
 
-  const AttributesDisplay({required this.attributes});
+  const AttributesDisplay({Key? key, required this.attributes})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: attributes.entries.map((entry) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 2.0,
+        crossAxisSpacing: 8.0,
+        mainAxisSpacing: 0.0,
+      ),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: attributes.length,
+      itemBuilder: (context, index) {
+        final entry = attributes.entries.elementAt(index);
         return AttributeCard(
           name: entry.key,
           icon: _getIconForAttribute(entry.key),
           value: entry.value,
         );
-      }).toList(),
+      },
     );
   }
 
@@ -149,7 +149,7 @@ class AttributesDisplay extends StatelessWidget {
       case '魅力':
         return Icons.mood;
       default:
-        return Icons.help;
+        return Icons.help_outline;
     }
   }
 }

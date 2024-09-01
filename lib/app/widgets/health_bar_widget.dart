@@ -18,14 +18,17 @@ class HealthBar extends StatelessWidget {
         children: [
           Text(
             'HP: $currentHitPoints / $maxHitPoints',
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontSize: 14.0),
           ),
           SizedBox(height: 4.0),
-          LinearProgressIndicator(
-            value: healthPercentage,
-            backgroundColor: Colors.red.withOpacity(0.5),
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-            minHeight: 20.0,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: LinearProgressIndicator(
+              value: healthPercentage,
+              backgroundColor: Colors.red.withOpacity(0.5),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+              minHeight: 20.0,
+            ),
           ),
         ],
       ),

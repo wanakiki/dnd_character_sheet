@@ -18,33 +18,30 @@ class CombatStatsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => _showEditDialog(context),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            _buildStatText('护甲等级 (AC)', armorClass),
-            SizedBox(width: 8.0),
-            _buildStatText('先攻', initiative),
-            SizedBox(width: 8.0),
-            _buildStatText('移动速度', speed),
-          ],
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildStatText(context, '护甲等级 (AC)', armorClass),
+          _buildStatText(context, '先攻', initiative),
+          _buildStatText(context, '移动速度', speed),
+        ],
       ),
     );
   }
 
-  Widget _buildStatText(String label, int value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildStatText(BuildContext context, String label, int value) {
+    return Column(
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 18.0),
+          style: Theme.of(context).textTheme.bodySmall,
         ),
-        SizedBox(width: 8.0),
         Text(
           value.toString(),
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -62,23 +59,25 @@ class CombatStatsWidget extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('更新角色属性'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildDialogTextField('护甲等级 (AC)', acController),
-              SizedBox(height: 16.0),
-              _buildDialogTextField('先攻', initiativeController),
-              SizedBox(height: 16.0),
-              _buildDialogTextField('移动速度', speedController),
-            ],
+          title: Text('更新角色属性', style: Theme.of(context).textTheme.titleLarge),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildDialogTextField('护甲等级 (AC)', acController),
+                SizedBox(height: 8.0),
+                _buildDialogTextField('先攻', initiativeController),
+                SizedBox(height: 8.0),
+                _buildDialogTextField('移动速度', speedController),
+              ],
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('取消'),
+              child: Text('取消', style: Theme.of(context).textTheme.labelLarge),
             ),
             TextButton(
               onPressed: () {
@@ -100,7 +99,7 @@ class CombatStatsWidget extends StatelessWidget {
 
                 Navigator.of(context).pop();
               },
-              child: Text('确认'),
+              child: Text('确认', style: Theme.of(context).textTheme.labelLarge),
             ),
           ],
         );

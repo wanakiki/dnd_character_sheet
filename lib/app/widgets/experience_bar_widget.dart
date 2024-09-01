@@ -17,7 +17,16 @@ class ExperienceBar extends StatelessWidget {
       onTap: () => _showExperienceInputDialog(context),
       child: Column(
         children: [
-          LinearProgressIndicator(value: progress, minHeight: 20.0),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 20.0,
+              backgroundColor: Colors.grey[300],
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+          ),
+          SizedBox(height: 8),
           Text('经验值: $currentExperience / $nextLevelXP'),
         ],
       ),

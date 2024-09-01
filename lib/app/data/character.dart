@@ -95,12 +95,12 @@ class Character {
   factory Character.empty() {
     return Character(
       name: 'Unnamed Hero',
-      race: 'Human',
-      characterClass: 'Fighter',
-      background: 'Soldier',
-      alignment: 'Neutral',
+      race: '人类',
+      characterClass: '战士',
+      background: '士兵',
+      alignment: '守序善良',
       level: 1,
-      experiencePoints: 0,
+      experiencePoints: 25,
       attributes: {
         '力量': 10,
         '敏捷': 10,
@@ -109,12 +109,12 @@ class Character {
         '感知': 10,
         '魅力': 10,
       },
-      currentHitPoints: 10,
+      currentHitPoints: 8,
       maxHitPoints: 10,
       armorClass: 10,
-      initiative: 0,
+      initiative: 10,
       speed: 30,
-      coin: [20, 20, 20],
+      coin: [20, 15, 10],
       avatarUrl: '',
     );
   }

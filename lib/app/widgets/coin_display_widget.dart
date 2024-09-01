@@ -10,18 +10,19 @@ class CoinDisplayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 4.0,
+      elevation: 2.0,
       margin: const EdgeInsets.all(10.0),
       child: InkWell(
         onTap: () => _showEditDialog(context),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
-                  const Icon(Icons.monetization_on, color: Colors.yellow),
+                  const Icon(Icons.monetization_on,
+                      color: Color.fromARGB(255, 187, 179, 17)),
                   const SizedBox(width: 8),
                   Text('金币: ${coin[0]}'),
                 ],
@@ -35,7 +36,8 @@ class CoinDisplayWidget extends StatelessWidget {
               ),
               Row(
                 children: [
-                  const Icon(Icons.monetization_on, color: Colors.brown),
+                  const Icon(Icons.monetization_on,
+                      color: Color.fromARGB(160, 121, 85, 72)),
                   const SizedBox(width: 8),
                   Text('铜币: ${coin[2]}'),
                 ],

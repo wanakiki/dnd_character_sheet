@@ -25,24 +25,41 @@ class CharacterDisplayScreen extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  character.name,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
+                // Text(
+                //   character.name,
+                //   style: Theme.of(context).textTheme.headlineMedium,
+                // ),
+                if (character.avatarUrl.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Image.network(character.avatarUrl),
+                  ),
+                if (character.avatarUrl.isEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/character.jpg',
+                        height: 150,
+                        width: 150,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 10),
                 CharacterDetailsWidget(
                     currentRace: character.race,
                     currentClass: character.characterClass,
                     currentBackground: character.background,
                     currentAlignment: character.alignment),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 CombatStatsWidget(
                     armorClass: character.armorClass,
                     initiative: character.initiative,
                     speed: character.speed),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
@@ -61,25 +78,7 @@ class CharacterDisplayScreen extends StatelessWidget {
                     CoinDisplayWidget(coin: character.coin)
                   ],
                 ),
-                Text(
-                  '属性:',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
                 AttributesDisplay(attributes: character.attributes),
-                const SizedBox(height: 20),
-                const SizedBox(height: 20),
-                if (character.avatarUrl.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Image.network(character.avatarUrl),
-                  ),
-                if (character.avatarUrl.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20.0),
-                    child: Placeholder(
-                      fallbackHeight: 150,
-                    ),
-                  ),
               ],
             ),
           );
