@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 // import 'package:hive/hive.dart';
 import 'package:dnd_character/app/data/character.dart';
+import 'diceset.dart';
 
 class CharacterManager extends ChangeNotifier {
   // final Box<Character> _box;
@@ -19,6 +20,18 @@ class CharacterManager extends ChangeNotifier {
   // Update the character attributes with the new attributes
   void updateAttribute(String type, int value) {
     _character.attributes[type] = value;
+    notifyListeners();
+  }
+
+  // Delete the target diceSet from the diceBag, input is the diceSet name
+  void deleteDiceSet(String diceSetName) {
+    _character.diceBag.removeWhere((diceSet) => diceSet.name == diceSetName);
+    notifyListeners();
+  }
+
+  // Add a diceSet to the diceBag
+  void addDiceSet(DiceSet diceSet) {
+    _character.diceBag.add(diceSet);
     notifyListeners();
   }
 

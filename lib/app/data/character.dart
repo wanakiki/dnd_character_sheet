@@ -1,5 +1,7 @@
 // 龙与地下城角色数据模型
-// 包含血量、生命值、种族、职业
+// 包含血量、生命值、种族、职业、骰子袋
+
+import 'package:dnd_character/app/data/diceset.dart';
 
 class Character {
   String name;
@@ -17,6 +19,7 @@ class Character {
   int speed;
   List<int> coin; // [gold, silver, copper]
   String avatarUrl;
+  List<DiceSet> diceBag; // 新增骰子袋属性
 
   Character({
     required this.name,
@@ -34,6 +37,7 @@ class Character {
     required this.speed,
     this.coin = const [0, 0, 0],
     this.avatarUrl = '',
+    this.diceBag = const [], // 初始化骰子袋
   });
 
   factory Character.fromJson(Map<String, dynamic> json) {
@@ -53,6 +57,10 @@ class Character {
       speed: json['speed'],
       coin: List<int>.from(json['coin']),
       avatarUrl: json['avatarUrl'],
+      diceBag: (json['diceBag'] as List<dynamic>?)
+              ?.map((e) => DiceSet.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -73,6 +81,7 @@ class Character {
       'speed': speed,
       'coin': coin,
       'avatarUrl': avatarUrl,
+      'diceBag': diceBag.map((diceSet) => diceSet.toJson()).toList(),
     };
   }
 
@@ -88,7 +97,8 @@ class Character {
         'Attributes: $attributes\n'
         'HP: $currentHitPoints/$maxHitPoints, AC: $armorClass, Initiative: $initiative, Speed: $speed\n'
         'Coin (Gold, Silver, Copper): ${coin[0]}, ${coin[1]}, ${coin[2]}\n'
-        'Avatar: $avatarUrl';
+        'Avatar: $avatarUrl\n'
+        'Dice Bag: ${diceBag.map((diceSet) => diceSet.toString()).join(', ')}';
   }
 
   // Factory constructor to create a default empty character
@@ -116,6 +126,13 @@ class Character {
       speed: 30,
       coin: [20, 15, 10],
       avatarUrl: '',
+      diceBag: [
+        DiceSet.standard(),
+        DiceSet(name: "武器命中", dices: {'D20': 1}, modifier: 4),
+        DiceSet(name: "伤害骰", dices: {'D8': 1}, modifier: 10),
+        DiceSet(name: "伤害骰", dices: {'D6': 8}),
+        DiceSet(name: "伤害骰", dices: {'D8': 1})
+      ], // 添加标准骰子组
     );
   }
 
@@ -136,6 +153,7 @@ class Character {
     int? speed,
     List<int>? coin,
     String? avatarUrl,
+    List<DiceSet>? diceBag,
   }) {
     return Character(
       name: name ?? this.name,
@@ -153,6 +171,7 @@ class Character {
       speed: speed ?? this.speed,
       coin: coin ?? this.coin,
       avatarUrl: avatarUrl ?? this.avatarUrl,
+      diceBag: diceBag ?? this.diceBag,
     );
   }
 }

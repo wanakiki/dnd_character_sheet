@@ -21,30 +21,47 @@ class AttributeCard extends StatelessWidget {
 
     return Card(
       elevation: 2.0,
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 2.0),
       child: InkWell(
         onTap: () => _showEditDialog(context),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 4.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Row(
-                children: [
-                  Icon(icon, size: 16.0, color: Theme.of(context).primaryColor),
-                  const SizedBox(width: 4.0),
-                  Text(name, style: textTheme.bodySmall),
-                ],
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(icon,
+                        size: 14.0, color: Theme.of(context).primaryColor),
+                    const SizedBox(width: 2.0),
+                    Flexible(
+                      child: Text(
+                        name,
+                        style: textTheme.bodySmall?.copyWith(fontSize: 12),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Column(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('$value',
-                      style: textTheme.titleSmall
-                          ?.copyWith(fontWeight: FontWeight.bold)),
-                  Text('${modifier >= 0 ? '+' : ''}$modifier',
-                      style: textTheme.bodySmall),
+                  Text(
+                    '$value',
+                    style: textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    '${modifier >= 0 ? '+' : ''}$modifier',
+                    style: textTheme.bodySmall?.copyWith(fontSize: 10),
+                  ),
                 ],
               ),
             ],
