@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 // import 'package:hive/hive.dart';
 import 'package:dnd_character/app/data/character.dart';
 import 'diceset.dart';
+import 'items.dart';
 
 class CharacterManager extends ChangeNotifier {
   // final Box<Character> _box;
@@ -32,6 +33,18 @@ class CharacterManager extends ChangeNotifier {
   // Add a diceSet to the diceBag
   void addDiceSet(DiceSet diceSet) {
     _character.diceBag.add(diceSet);
+    notifyListeners();
+  }
+
+  // 添加物品到角色的背包
+  void addItem(Item item) {
+    _character.backpack.add(item);
+    notifyListeners();
+  }
+
+  // 根据 uniqueId 删除物品
+  void deleteItem(String uniqueId) {
+    _character.backpack.removeWhere((item) => item.uniqueId == uniqueId);
     notifyListeners();
   }
 

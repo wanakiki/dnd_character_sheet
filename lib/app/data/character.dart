@@ -1,7 +1,8 @@
 // 龙与地下城角色数据模型
-// 包含血量、生命值、种族、职业、骰子袋
+// 包含血量、生命值、种族、职业、骰子袋、背包
 
 import 'package:dnd_character/app/data/diceset.dart';
+import 'items.dart';
 
 class Character {
   String name;
@@ -20,6 +21,7 @@ class Character {
   List<int> coin; // [gold, silver, copper]
   String avatarUrl;
   List<DiceSet> diceBag; // 新增骰子袋属性
+  List<Item> backpack; // 新增背包属性
 
   Character({
     required this.name,
@@ -38,6 +40,7 @@ class Character {
     this.coin = const [0, 0, 0],
     this.avatarUrl = '',
     this.diceBag = const [], // 初始化骰子袋
+    this.backpack = const [], // 初始化背包
   });
 
   factory Character.fromJson(Map<String, dynamic> json) {
@@ -61,6 +64,10 @@ class Character {
               ?.map((e) => DiceSet.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      backpack: (json['backpack'] as List<dynamic>?)
+              ?.map((e) => Item.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -82,6 +89,7 @@ class Character {
       'coin': coin,
       'avatarUrl': avatarUrl,
       'diceBag': diceBag.map((diceSet) => diceSet.toJson()).toList(),
+      'backpack': backpack.map((item) => item.toJson()).toList(),
     };
   }
 
@@ -98,7 +106,8 @@ class Character {
         'HP: $currentHitPoints/$maxHitPoints, AC: $armorClass, Initiative: $initiative, Speed: $speed\n'
         'Coin (Gold, Silver, Copper): ${coin[0]}, ${coin[1]}, ${coin[2]}\n'
         'Avatar: $avatarUrl\n'
-        'Dice Bag: ${diceBag.map((diceSet) => diceSet.toString()).join(', ')}';
+        'Dice Bag: ${diceBag.map((diceSet) => diceSet.toString()).join(', ')}\n'
+        'Backpack: ${backpack.map((item) => item.toString()).join(', ')}';
   }
 
   // Factory constructor to create a default empty character
@@ -133,6 +142,9 @@ class Character {
         DiceSet(name: "伤害骰", dices: {'D6': 8}),
         DiceSet(name: "伤害骰", dices: {'D8': 1})
       ], // 添加标准骰子组
+      backpack: [
+        Item(name: 'Sword', quantity: 1, description: 'A sharp blade')
+      ], // 初始化空背包
     );
   }
 
@@ -154,6 +166,7 @@ class Character {
     List<int>? coin,
     String? avatarUrl,
     List<DiceSet>? diceBag,
+    List<Item>? backpack,
   }) {
     return Character(
       name: name ?? this.name,
@@ -172,6 +185,7 @@ class Character {
       coin: coin ?? this.coin,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       diceBag: diceBag ?? this.diceBag,
+      backpack: backpack ?? this.backpack,
     );
   }
 }
