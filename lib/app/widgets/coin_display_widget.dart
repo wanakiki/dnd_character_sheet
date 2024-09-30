@@ -151,8 +151,7 @@ class CoinDisplayWidget extends StatelessWidget {
 
       CharacterManager characterManager =
           Provider.of<CharacterManager>(context, listen: false);
-      characterManager
-          .updateCharacter(characterManager.character.copyWith(coin: newCoin));
+      characterManager.updateCharacter({"coin": newCoin});
     } else {
       // TODO show the error message
       showDialog(
@@ -209,8 +208,7 @@ class CoinDisplayWidget extends StatelessWidget {
 
         CharacterManager characterManager =
             Provider.of<CharacterManager>(context, listen: false);
-        characterManager.updateCharacter(
-            characterManager.character.copyWith(coin: newCoin));
+        characterManager.updateCharacter({"coin": newCoin});
       }
     } else {
       showDialog(

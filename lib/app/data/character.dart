@@ -2,9 +2,16 @@
 // 包含血量、生命值、种族、职业、骰子袋、背包
 
 import 'package:dnd_character/app/data/diceset.dart';
+import 'package:isar/isar.dart';
 import 'items.dart';
 
+part 'character.g.dart';
+
+@collection
 class Character {
+  Id id = Isar.autoIncrement;
+
+  @Index(unique: true, replace: true)
   String name;
   String race;
   String characterClass;
@@ -12,7 +19,7 @@ class Character {
   String alignment;
   int level;
   int experiencePoints;
-  Map<String, int> attributes; // 六维属性字典
+  List<int> attributes; // 六维属性列表，顺序为：力量、敏捷、体质、智力、感知、魅力
   int currentHitPoints;
   int maxHitPoints;
   int armorClass;
@@ -52,7 +59,7 @@ class Character {
       alignment: json['alignment'],
       level: json['level'],
       experiencePoints: json['experiencePoints'],
-      attributes: Map<String, int>.from(json['attributes']),
+      attributes: List<int>.from(json['attributes']),
       currentHitPoints: json['currentHitPoints'],
       maxHitPoints: json['maxHitPoints'],
       armorClass: json['armorClass'],
@@ -120,14 +127,7 @@ class Character {
       alignment: '守序善良',
       level: 1,
       experiencePoints: 25,
-      attributes: {
-        '力量': 10,
-        '敏捷': 10,
-        '体质': 10,
-        '智力': 10,
-        '感知': 10,
-        '魅力': 10,
-      },
+      attributes: [10, 10, 10, 10, 10, 10], // 初始化六维属性
       currentHitPoints: 8,
       maxHitPoints: 10,
       armorClass: 10,
@@ -137,10 +137,6 @@ class Character {
       avatarUrl: '',
       diceBag: [
         DiceSet.standard(),
-        DiceSet(name: "武器命中", dices: {'D20': 1}, modifier: 4),
-        DiceSet(name: "伤害骰", dices: {'D8': 1}, modifier: 10),
-        DiceSet(name: "伤害骰", dices: {'D6': 8}),
-        DiceSet(name: "伤害骰", dices: {'D8': 1})
       ], // 添加标准骰子组
       backpack: [
         Item(name: 'Sword', quantity: 1, description: 'A sharp blade')
@@ -157,7 +153,7 @@ class Character {
     String? alignment,
     int? level,
     int? experiencePoints,
-    Map<String, int>? attributes,
+    List<int>? attributes,
     int? currentHitPoints,
     int? maxHitPoints,
     int? armorClass,

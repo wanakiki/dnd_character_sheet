@@ -119,12 +119,12 @@ class CharacterDetailsWidget extends StatelessWidget {
       BuildContext context, String attribute, String value) {
     final characterManager =
         Provider.of<CharacterManager>(context, listen: false);
-    final updatedCharacter = characterManager.character.copyWith(
-      race: attribute == '种族' ? value : null,
-      characterClass: attribute == '职业' ? value : null,
-      background: attribute == '背景' ? value : null,
-      alignment: attribute == '阵营' ? value : null,
-    );
-    characterManager.updateCharacter(updatedCharacter);
+    final updatedAttributes = {
+      if (attribute == '种族') 'race': value,
+      if (attribute == '职业') 'characterClass': value,
+      if (attribute == '背景') 'background': value,
+      if (attribute == '阵营') 'alignment': value,
+    };
+    characterManager.updateCharacter(updatedAttributes);
   }
 }

@@ -100,11 +100,10 @@ class HealthBar extends StatelessWidget {
                     // 更新角色生命值和最大生命值
                     CharacterManager characterManager =
                         Provider.of<CharacterManager>(context, listen: false);
-                    characterManager
-                        .updateCharacter(characterManager.character.copyWith(
-                      currentHitPoints: newHitPoints,
-                      maxHitPoints: newMaxHitPoints,
-                    ));
+                    characterManager.updateCharacter({
+                      'currentHitPoints': newHitPoints,
+                      'maxHitPoints': newMaxHitPoints,
+                    });
                   },
                   child: Text('确认'),
                 ),

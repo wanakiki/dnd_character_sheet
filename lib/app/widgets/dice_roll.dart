@@ -43,12 +43,16 @@ class _DiceRollPopupState extends State<DiceRollPopup>
       _diceResults.clear();
       _secondDiceResults.clear();
 
-      widget.diceSet.dices.forEach((diceType, count) {
-        if (count == 0) return;
+      // TODO check the calculation logic
+      const sidesList = [4, 6, 8, 10, 12, 20]; // 定义面数列表
+      for (int i = 0; i < widget.diceSet.dices.length; i++) {
+        int count = widget.diceSet.dices[i];
+        if (count == 0) continue;
+        String diceType = 'D${sidesList[i]}'; // 根据索引和面数列表推断骰子类型
         _diceResults[diceType] = [];
         _secondDiceResults[diceType] = [];
-        for (int i = 0; i < count; i++) {
-          int sides = int.parse(diceType.substring(1));
+        for (int j = 0; j < count; j++) {
+          int sides = sidesList[i]; // 根据索引和面数列表推断骰子的面数
           int roll = Random().nextInt(sides) + 1;
           _diceResults[diceType]!.add(roll);
           _result += roll;
@@ -59,7 +63,7 @@ class _DiceRollPopupState extends State<DiceRollPopup>
             _secondResult += secondRoll;
           }
         }
-      });
+      }
 
       _result += widget.diceSet.modifier;
       if (widget.advantageDisadvantage) {

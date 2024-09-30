@@ -89,13 +89,11 @@ class CombatStatsWidget extends StatelessWidget {
 
                 CharacterManager characterManager =
                     Provider.of<CharacterManager>(context, listen: false);
-                characterManager.updateCharacter(
-                  characterManager.character.copyWith(
-                    armorClass: newAC,
-                    initiative: newInitiative,
-                    speed: newSpeed,
-                  ),
-                );
+                characterManager.updateCharacter({
+                  'armorClass': newAC,
+                  'initiative': newInitiative,
+                  'speed': newSpeed,
+                });
 
                 Navigator.of(context).pop();
               },

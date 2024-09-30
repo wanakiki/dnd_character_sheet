@@ -120,8 +120,7 @@ class DiceBagWidget extends StatelessWidget {
                     );
                   },
                   onLongPress: () {
-                    _showEditDialog(
-                        context, DiceSet(name: "默认", dices: {"D20": 1}));
+                    _showEditDialog(context, DiceSet.standard());
                   },
                   child: Container(
                     padding: const EdgeInsets.all(8),
@@ -146,13 +145,13 @@ class DiceBagWidget extends StatelessWidget {
   // 新增的函数，用于处理长按操作
   void _showEditDialog(BuildContext context, DiceSet diceSet) {
     // 初始化骰子数量
-    Map<String, int> dices = diceSet.dices;
-    int d4Count = dices['D4'] ?? 0;
-    int d6Count = dices['D6'] ?? 0;
-    int d8Count = dices['D8'] ?? 0;
-    int d10Count = dices['D10'] ?? 0;
-    int d12Count = dices['D12'] ?? 0;
-    int d20Count = dices['D20'] ?? 0;
+    List<int> dices = diceSet.dices;
+    int d4Count = dices[0];
+    int d6Count = dices[1];
+    int d8Count = dices[2];
+    int d10Count = dices[3];
+    int d12Count = dices[4];
+    int d20Count = dices[5];
 
     // 初始化骰子组名称
     String diceSetName = diceSet.name;
@@ -262,14 +261,14 @@ class DiceBagWidget extends StatelessWidget {
 
                 DiceSet updatedDiceSet = DiceSet(
                   name: diceSetName,
-                  dices: {
-                    'D4': d4Count,
-                    'D6': d6Count,
-                    'D8': d8Count,
-                    'D10': d10Count,
-                    'D12': d12Count,
-                    'D20': d20Count,
-                  },
+                  dices: [
+                    d4Count,
+                    d6Count,
+                    d8Count,
+                    d10Count,
+                    d12Count,
+                    d20Count
+                  ],
                   modifier: modifier,
                 );
 

@@ -1,3 +1,7 @@
+import 'package:isar/isar.dart';
+part 'items.g.dart';
+
+@embedded
 class Item {
   String name; // 道具名称
   int quantity; // 数量
@@ -8,9 +12,9 @@ class Item {
   String uniqueId; // 唯一标识符，用于区分同名的物品
 
   Item({
-    required this.name,
-    required this.quantity,
-    required this.description,
+    this.name = 'sowrd', // 默认名称
+    this.quantity = 1, // 默认数量
+    this.description = 'A simple sowrd.', // 默认描述
     this.weight = 0.0, // 默认重量
     this.price = '0', // 默认价格
     this.type = '道具', // 默认类型

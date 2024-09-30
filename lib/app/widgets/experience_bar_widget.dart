@@ -122,11 +122,9 @@ class ExperienceBar extends StatelessWidget {
       newLevel--;
     }
 
-    characterManager.updateCharacter(
-      characterManager.character.copyWith(
-        experiencePoints: newExperience,
-        level: newLevel,
-      ),
-    );
+    characterManager.updateCharacter({
+      'experiencePoints': newExperience,
+      'level': newLevel,
+    });
   }
 }

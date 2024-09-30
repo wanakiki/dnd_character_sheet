@@ -123,7 +123,7 @@ class AttributeCard extends StatelessWidget {
 }
 
 class AttributesDisplay extends StatelessWidget {
-  final Map<String, int> attributes;
+  final List<int> attributes;
 
   const AttributesDisplay({Key? key, required this.attributes})
       : super(key: key);
@@ -141,14 +141,33 @@ class AttributesDisplay extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: attributes.length,
       itemBuilder: (context, index) {
-        final entry = attributes.entries.elementAt(index);
+        final entry = attributes[index];
         return AttributeCard(
-          name: entry.key,
-          icon: _getIconForAttribute(entry.key),
-          value: entry.value,
+          name: _getAttributeName(index),
+          icon: _getIconForAttribute(_getAttributeName(index)),
+          value: entry,
         );
       },
     );
+  }
+
+  String _getAttributeName(int index) {
+    switch (index) {
+      case 0:
+        return '力量';
+      case 1:
+        return '敏捷';
+      case 2:
+        return '体质';
+      case 3:
+        return '智力';
+      case 4:
+        return '感知';
+      case 5:
+        return '魅力';
+      default:
+        return '未知';
+    }
   }
 
   IconData _getIconForAttribute(String attributeName) {
