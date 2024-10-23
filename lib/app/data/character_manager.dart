@@ -27,7 +27,6 @@ class CharacterManager extends ChangeNotifier {
   Future<void> _loadCharacter() async {
     // 获取character 变量
     final character = await isar.characters.get(1);
-    print(character);
     // 判断是否存在
     if (character != null) {
       _character = character;
@@ -132,6 +131,9 @@ class CharacterManager extends ChangeNotifier {
 
   // 从骰子袋中删除指定名称的骰子集
   void deleteDiceSet(String diceSetName) {
+    // Convert the fixed-length list to a growable list
+    _character.diceBag = List.from(_character.diceBag);
+
     _character.diceBag.removeWhere((diceSet) => diceSet.name == diceSetName);
     notifyListeners();
     _saveCharacter();
@@ -139,7 +141,7 @@ class CharacterManager extends ChangeNotifier {
 
   // 向骰子袋中添加骰子集
   void addDiceSet(DiceSet diceSet) {
-    _character.diceBag.add(diceSet);
+    _character.diceBag = [..._character.diceBag, diceSet];
     notifyListeners();
     _saveCharacter();
   }

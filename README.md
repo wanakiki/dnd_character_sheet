@@ -6,7 +6,7 @@ A Dungeons & Dragons character sheet app built with Flutter. Designed to replace
 
 ## TODO
 
-- [ ] Data persistence storage
+- [x] Data persistence storage
 - [ ] Proficiency and corresponding advantage/disadvantage checks
 - [ ] Campaign notes
 - [ ] Spellbook
