@@ -15,6 +15,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:dnd_character/app/widgets/dice_row.dart';
 import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
 
 class CharacterDisplayScreen extends StatefulWidget {
   CharacterDisplayScreen({super.key});
@@ -56,6 +57,35 @@ class _CharacterDisplayScreenState extends State<CharacterDisplayScreen> {
     }
   }
 
+  Future<void> _exportCharacter() async {
+    final Character character =
+        Provider.of<CharacterManager>(context, listen: false).character;
+    final jsonString = jsonEncode(character.toJson());
+
+    try {
+      // Attempt to get the Downloads directory
+      final directory = Directory('/storage/emulated/0/Download');
+      if (await directory.exists()) {
+        final filePath = '${directory.path}/character_export.json';
+        final file = File(filePath);
+
+        await file.writeAsString(jsonString);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Character exported to $filePath')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Downloads directory not found')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to export character: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,6 +99,11 @@ class _CharacterDisplayScreenState extends State<CharacterDisplayScreen> {
                 _isEditMode = !_isEditMode; // Toggle edit mode
               });
             },
+          ),
+          IconButton(
+            icon: Icon(Icons.download),
+            onPressed: _exportCharacter,
+            tooltip: 'Export Character',
           ),
         ],
       ),
