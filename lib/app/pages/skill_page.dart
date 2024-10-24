@@ -112,6 +112,7 @@ class _SkillExpertiseScreenState extends State<SkillExpertiseScreen> {
                       ),
                       tilePadding: EdgeInsets.zero,
                       childrenPadding: EdgeInsets.zero,
+                      initiallyExpanded: true, // 默认展开
                       children: expertise
                           .map((exp) => Card(
                                 margin: EdgeInsets.symmetric(vertical: 4.0),
@@ -140,16 +141,6 @@ class _SkillExpertiseScreenState extends State<SkillExpertiseScreen> {
         floatingActionButton: Stack(
           children: [
             Positioned(
-              bottom: 80.0, // Adjust the position as needed
-              right: 16.0,
-              child: FloatingActionButton(
-                heroTag: 'backButton', // Unique heroTag
-                onPressed: () => Navigator.of(context).pop(),
-                child: Icon(Icons.arrow_back),
-                tooltip: '返回',
-              ),
-            ),
-            Positioned(
               bottom: 16.0,
               right: 16.0,
               child: FloatingActionButton(
@@ -175,6 +166,7 @@ class AddSkillOrExpertiseDialog extends StatefulWidget {
 class _AddSkillOrExpertiseDialogState extends State<AddSkillOrExpertiseDialog> {
   bool _isAddingSkill = true;
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   String? _selectedSkill;
 
   final List<String> _skills = [
@@ -261,9 +253,17 @@ class _AddSkillOrExpertiseDialogState extends State<AddSkillOrExpertiseDialog> {
               ),
             ),
           if (!_isAddingSkill)
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(labelText: '描述'),
+            Column(
+              children: [
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(labelText: '名称'),
+                ),
+                TextField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(labelText: '描述'),
+                ),
+              ],
             ),
         ],
       ),
@@ -276,12 +276,11 @@ class _AddSkillOrExpertiseDialogState extends State<AddSkillOrExpertiseDialog> {
                     .addSkill(_selectedSkill!);
               }
             } else {
-              if (_selectedSkill != null &&
-                  _descriptionController.text.isNotEmpty) {
+              if (_nameController.text.isNotEmpty) {
                 Provider.of<CharacterManager>(context, listen: false)
                     .addExpertise(
                   ExpertiseItem(
-                    name: _selectedSkill!,
+                    name: _nameController.text,
                     description: _descriptionController.text,
                   ),
                 );
