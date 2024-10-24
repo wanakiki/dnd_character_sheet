@@ -10,6 +10,7 @@ import 'package:dnd_character/app/widgets/race_and_class_widget.dart';
 import 'package:dnd_character/app/widgets/combat_stats_widget.dart';
 import 'package:dnd_character/app/widgets/dice_bag.dart';
 import 'package:dnd_character/app/widgets/backpack_widget.dart';
+import 'package:dnd_character/app/pages/skill_page.dart';
 
 class CharacterDisplayScreen extends StatelessWidget {
   CharacterDisplayScreen({super.key});
@@ -82,6 +83,16 @@ class CharacterDisplayScreen extends StatelessWidget {
                     ],
                   ),
                   AttributesDisplay(attributes: character.attributes),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SkillExpertiseScreen()));
+                    },
+                    child: Text('技能专长'),
+                  ),
                   DiceBagWidget(diceBag: character.diceBag),
                   BackpackWidget(backpack: character.backpack),
                 ],

@@ -3,7 +3,8 @@ import 'package:dnd_character/app/data/character.dart';
 import 'diceset.dart';
 import 'items.dart';
 import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart'; // 添加此行以导入所需的库
+import 'package:path_provider/path_provider.dart';
+import 'expertise_item.dart';
 
 class CharacterManager extends ChangeNotifier {
   late Character _character;
@@ -165,6 +166,34 @@ class CharacterManager extends ChangeNotifier {
     await isar.writeTxn(() async {
       await isar.characters.put(_character);
     });
+  }
+
+  // Add a skill to the character
+  void addSkill(String skill) {
+    _character.skills = [..._character.skills, skill];
+    notifyListeners();
+    _saveCharacter();
+  }
+
+// Delete a skill from the character
+  void deleteSkill(String skill) {
+    _character.skills.remove(skill);
+    notifyListeners();
+    _saveCharacter();
+  }
+
+// Add an expertise to the character
+  void addExpertise(ExpertiseItem expertise) {
+    _character.expertise = [..._character.expertise, expertise];
+    notifyListeners();
+    _saveCharacter();
+  }
+
+// Delete an expertise from the character
+  void deleteExpertise(String expertiseName) {
+    _character.expertise.removeWhere((exp) => exp.name == expertiseName);
+    notifyListeners();
+    _saveCharacter();
   }
 
   Character get character => _character;

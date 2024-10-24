@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dnd_character/app/pages/home_page.dart';
 import 'package:dnd_character/app/data/character_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:dnd_character/app/pages/skill_page.dart';
 
 void main() {
   runApp(

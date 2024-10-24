@@ -74,33 +74,44 @@ const CharacterSchema = CollectionSchema(
       name: r'experiencePoints',
       type: IsarType.long,
     ),
-    r'initiative': PropertySchema(
+    r'expertise': PropertySchema(
       id: 11,
+      name: r'expertise',
+      type: IsarType.objectList,
+      target: r'ExpertiseItem',
+    ),
+    r'initiative': PropertySchema(
+      id: 12,
       name: r'initiative',
       type: IsarType.long,
     ),
     r'level': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'level',
       type: IsarType.long,
     ),
     r'maxHitPoints': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'maxHitPoints',
       type: IsarType.long,
     ),
     r'name': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'name',
       type: IsarType.string,
     ),
     r'race': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'race',
       type: IsarType.string,
     ),
+    r'skills': PropertySchema(
+      id: 17,
+      name: r'skills',
+      type: IsarType.stringList,
+    ),
     r'speed': PropertySchema(
-      id: 16,
+      id: 18,
       name: r'speed',
       type: IsarType.long,
     )
@@ -110,9 +121,27 @@ const CharacterSchema = CollectionSchema(
   deserialize: _characterDeserialize,
   deserializeProp: _characterDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'name': IndexSchema(
+      id: 879695947855722453,
+      name: r'name',
+      unique: true,
+      replace: true,
+      properties: [
+        IndexPropertySchema(
+          name: r'name',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    )
+  },
   links: {},
-  embeddedSchemas: {r'DiceSet': DiceSetSchema, r'Item': ItemSchema},
+  embeddedSchemas: {
+    r'DiceSet': DiceSetSchema,
+    r'Item': ItemSchema,
+    r'ExpertiseItem': ExpertiseItemSchema
+  },
   getId: _characterGetId,
   getLinks: _characterGetLinks,
   attach: _characterAttach,
@@ -147,8 +176,24 @@ int _characterEstimateSize(
       bytesCount += DiceSetSchema.estimateSize(value, offsets, allOffsets);
     }
   }
+  bytesCount += 3 + object.expertise.length * 3;
+  {
+    final offsets = allOffsets[ExpertiseItem]!;
+    for (var i = 0; i < object.expertise.length; i++) {
+      final value = object.expertise[i];
+      bytesCount +=
+          ExpertiseItemSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.race.length * 3;
+  bytesCount += 3 + object.skills.length * 3;
+  {
+    for (var i = 0; i < object.skills.length; i++) {
+      final value = object.skills[i];
+      bytesCount += value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -179,12 +224,19 @@ void _characterSerialize(
     object.diceBag,
   );
   writer.writeLong(offsets[10], object.experiencePoints);
-  writer.writeLong(offsets[11], object.initiative);
-  writer.writeLong(offsets[12], object.level);
-  writer.writeLong(offsets[13], object.maxHitPoints);
-  writer.writeString(offsets[14], object.name);
-  writer.writeString(offsets[15], object.race);
-  writer.writeLong(offsets[16], object.speed);
+  writer.writeObjectList<ExpertiseItem>(
+    offsets[11],
+    allOffsets,
+    ExpertiseItemSchema.serialize,
+    object.expertise,
+  );
+  writer.writeLong(offsets[12], object.initiative);
+  writer.writeLong(offsets[13], object.level);
+  writer.writeLong(offsets[14], object.maxHitPoints);
+  writer.writeString(offsets[15], object.name);
+  writer.writeString(offsets[16], object.race);
+  writer.writeStringList(offsets[17], object.skills);
+  writer.writeLong(offsets[18], object.speed);
 }
 
 Character _characterDeserialize(
@@ -217,12 +269,20 @@ Character _characterDeserialize(
         ) ??
         const [],
     experiencePoints: reader.readLongOrNull(offsets[10]) ?? 0,
-    initiative: reader.readLong(offsets[11]),
-    level: reader.readLongOrNull(offsets[12]) ?? 1,
-    maxHitPoints: reader.readLong(offsets[13]),
-    name: reader.readString(offsets[14]),
-    race: reader.readString(offsets[15]),
-    speed: reader.readLong(offsets[16]),
+    expertise: reader.readObjectList<ExpertiseItem>(
+          offsets[11],
+          ExpertiseItemSchema.deserialize,
+          allOffsets,
+          ExpertiseItem(),
+        ) ??
+        const [],
+    initiative: reader.readLong(offsets[12]),
+    level: reader.readLongOrNull(offsets[13]) ?? 1,
+    maxHitPoints: reader.readLong(offsets[14]),
+    name: reader.readString(offsets[15]),
+    race: reader.readString(offsets[16]),
+    skills: reader.readStringList(offsets[17]) ?? const [],
+    speed: reader.readLong(offsets[18]),
   );
   object.id = id;
   return object;
@@ -270,16 +330,26 @@ P _characterDeserializeProp<P>(
     case 10:
       return (reader.readLongOrNull(offset) ?? 0) as P;
     case 11:
-      return (reader.readLong(offset)) as P;
+      return (reader.readObjectList<ExpertiseItem>(
+            offset,
+            ExpertiseItemSchema.deserialize,
+            allOffsets,
+            ExpertiseItem(),
+          ) ??
+          const []) as P;
     case 12:
-      return (reader.readLongOrNull(offset) ?? 1) as P;
-    case 13:
       return (reader.readLong(offset)) as P;
+    case 13:
+      return (reader.readLongOrNull(offset) ?? 1) as P;
     case 14:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 15:
       return (reader.readString(offset)) as P;
     case 16:
+      return (reader.readString(offset)) as P;
+    case 17:
+      return (reader.readStringList(offset) ?? const []) as P;
+    case 18:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -296,6 +366,60 @@ List<IsarLinkBase<dynamic>> _characterGetLinks(Character object) {
 
 void _characterAttach(IsarCollection<dynamic> col, Id id, Character object) {
   object.id = id;
+}
+
+extension CharacterByIndex on IsarCollection<Character> {
+  Future<Character?> getByName(String name) {
+    return getByIndex(r'name', [name]);
+  }
+
+  Character? getByNameSync(String name) {
+    return getByIndexSync(r'name', [name]);
+  }
+
+  Future<bool> deleteByName(String name) {
+    return deleteByIndex(r'name', [name]);
+  }
+
+  bool deleteByNameSync(String name) {
+    return deleteByIndexSync(r'name', [name]);
+  }
+
+  Future<List<Character?>> getAllByName(List<String> nameValues) {
+    final values = nameValues.map((e) => [e]).toList();
+    return getAllByIndex(r'name', values);
+  }
+
+  List<Character?> getAllByNameSync(List<String> nameValues) {
+    final values = nameValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'name', values);
+  }
+
+  Future<int> deleteAllByName(List<String> nameValues) {
+    final values = nameValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'name', values);
+  }
+
+  int deleteAllByNameSync(List<String> nameValues) {
+    final values = nameValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'name', values);
+  }
+
+  Future<Id> putByName(Character object) {
+    return putByIndex(r'name', object);
+  }
+
+  Id putByNameSync(Character object, {bool saveLinks = true}) {
+    return putByIndexSync(r'name', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByName(List<Character> objects) {
+    return putAllByIndex(r'name', objects);
+  }
+
+  List<Id> putAllByNameSync(List<Character> objects, {bool saveLinks = true}) {
+    return putAllByIndexSync(r'name', objects, saveLinks: saveLinks);
+  }
 }
 
 extension CharacterQueryWhereSort
@@ -371,6 +495,51 @@ extension CharacterQueryWhere
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterWhereClause> nameEqualTo(
+      String name) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'name',
+        value: [name],
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterWhereClause> nameNotEqualTo(
+      String name) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ));
+      }
     });
   }
 }
@@ -1537,6 +1706,94 @@ extension CharacterQueryFilter
     });
   }
 
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      expertiseLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'expertise',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition> expertiseIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'expertise',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      expertiseIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'expertise',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      expertiseLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'expertise',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      expertiseLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'expertise',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      expertiseLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'expertise',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<Character, Character, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -2012,6 +2269,228 @@ extension CharacterQueryFilter
     });
   }
 
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'skills',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'skills',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'skills',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'skills',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'skills',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'skills',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'skills',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsElementMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'skills',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'skills',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'skills',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition> skillsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'skills',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition> skillsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'skills',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition> skillsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'skills',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'skills',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      skillsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'skills',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition> skillsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'skills',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<Character, Character, QAfterFilterCondition> speedEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -2079,6 +2558,13 @@ extension CharacterQueryObject
       FilterQuery<DiceSet> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'diceBag');
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition> expertiseElement(
+      FilterQuery<ExpertiseItem> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'expertise');
     });
   }
 }
@@ -2512,6 +2998,12 @@ extension CharacterQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Character, Character, QDistinct> distinctBySkills() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'skills');
+    });
+  }
+
   QueryBuilder<Character, Character, QDistinct> distinctBySpeed() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'speed');
@@ -2593,6 +3085,13 @@ extension CharacterQueryProperty
     });
   }
 
+  QueryBuilder<Character, List<ExpertiseItem>, QQueryOperations>
+      expertiseProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'expertise');
+    });
+  }
+
   QueryBuilder<Character, int, QQueryOperations> initiativeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'initiative');
@@ -2620,6 +3119,12 @@ extension CharacterQueryProperty
   QueryBuilder<Character, String, QQueryOperations> raceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'race');
+    });
+  }
+
+  QueryBuilder<Character, List<String>, QQueryOperations> skillsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'skills');
     });
   }
 
