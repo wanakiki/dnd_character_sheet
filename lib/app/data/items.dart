@@ -50,4 +50,23 @@ class Item {
   String toString() {
     return '名称: $name, 数量: $quantity, 描述: $description, 重量: $weight, 价格: $price, 类型: $type, 唯一标识符: $uniqueId';
   }
+
+  // 复制Item对象
+  Item copyWith({
+    String? name,
+    int? quantity,
+    String? description,
+    double? weight,
+    String? price,
+    String? type,
+  }) {
+    return Item(
+      name: name ?? this.name,
+      quantity: quantity ?? this.quantity,
+      description: description ?? this.description,
+      weight: weight ?? this.weight,
+      price: price ?? this.price,
+      type: type ?? this.type,
+    );
+  }
 }

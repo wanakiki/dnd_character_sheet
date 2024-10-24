@@ -9,8 +9,8 @@ import 'package:dnd_character/app/widgets/experience_bar_widget.dart';
 import 'package:dnd_character/app/widgets/race_and_class_widget.dart';
 import 'package:dnd_character/app/widgets/combat_stats_widget.dart';
 import 'package:dnd_character/app/widgets/dice_bag.dart';
-import 'package:dnd_character/app/widgets/backpack_widget.dart';
 import 'package:dnd_character/app/pages/skill_page.dart';
+import 'package:dnd_character/app/pages/backpack_page.dart';
 
 class CharacterDisplayScreen extends StatelessWidget {
   CharacterDisplayScreen({super.key});
@@ -94,7 +94,16 @@ class CharacterDisplayScreen extends StatelessWidget {
                     child: Text('技能专长'),
                   ),
                   DiceBagWidget(diceBag: character.diceBag),
-                  BackpackWidget(backpack: character.backpack),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BackpackPage()));
+                    },
+                    child: Text('背包'),
+                  ),
+                  // BackpackWidget(backpack: character.backpack),
                 ],
               ),
             ),

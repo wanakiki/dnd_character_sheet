@@ -196,5 +196,19 @@ class CharacterManager extends ChangeNotifier {
     _saveCharacter();
   }
 
+  // 更新物品数量
+  void updateItemQuantity(Item item, int newQuantity) {
+    item.quantity = newQuantity;
+    notifyListeners();
+    _saveCharacter();
+  }
+
+  //更新物品信息
+  void updateItem(Item item) {
+    _character.backpack = [..._character.backpack, item];
+    notifyListeners();
+    _saveCharacter();
+  }
+
   Character get character => _character;
 }
