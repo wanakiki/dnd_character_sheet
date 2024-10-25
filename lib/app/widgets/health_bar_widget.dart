@@ -5,19 +5,28 @@ import 'package:dnd_character/app/data/character_manager.dart';
 class HealthBar extends StatelessWidget {
   final int currentHitPoints;
   final int maxHitPoints;
+  final int temporaryHitPoints; // New field for temporary hit points
 
-  HealthBar({required this.currentHitPoints, required this.maxHitPoints});
+  HealthBar({
+    required this.currentHitPoints,
+    required this.maxHitPoints,
+    required this.temporaryHitPoints,
+  });
 
   @override
   Widget build(BuildContext context) {
-    double healthPercentage = currentHitPoints / maxHitPoints;
+    double totalHitPoints = currentHitPoints + temporaryHitPoints.toDouble();
+    double healthPercentage = totalHitPoints / maxHitPoints;
 
     return GestureDetector(
       onTap: () => _showHealthDialog(context),
       child: Column(
         children: [
           Text(
-            'HP: $currentHitPoints / $maxHitPoints',
+            'HP: $currentHitPoints / $maxHitPoints' +
+                (temporaryHitPoints > 0
+                    ? ' (Temporary: $temporaryHitPoints)'
+                    : ''),
             style: TextStyle(fontSize: 14.0),
           ),
           SizedBox(height: 4.0),
@@ -38,8 +47,12 @@ class HealthBar extends StatelessWidget {
   void _showHealthDialog(BuildContext context) {
     int newHitPoints = currentHitPoints;
     int newMaxHitPoints = maxHitPoints;
+    int newTemporaryHitPoints =
+        temporaryHitPoints; // Track changes to temporary hit points
     TextEditingController maxHpController =
         TextEditingController(text: maxHitPoints.toString());
+    TextEditingController tempHpController =
+        TextEditingController(text: temporaryHitPoints.toString());
 
     showDialog(
       context: context,
@@ -60,9 +73,18 @@ class HealthBar extends StatelessWidget {
                       setState(() {
                         newMaxHitPoints =
                             int.tryParse(value) ?? newMaxHitPoints;
-                        if (newHitPoints > newMaxHitPoints) {
-                          newHitPoints = newMaxHitPoints;
-                        }
+                        newHitPoints = newMaxHitPoints;
+                      });
+                    },
+                  ),
+                  TextField(
+                    controller: tempHpController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(labelText: '临时生命值'),
+                    onChanged: (value) {
+                      setState(() {
+                        newTemporaryHitPoints =
+                            int.tryParse(value) ?? newTemporaryHitPoints;
                       });
                     },
                   ),
@@ -103,6 +125,7 @@ class HealthBar extends StatelessWidget {
                     characterManager.updateCharacter({
                       'currentHitPoints': newHitPoints,
                       'maxHitPoints': newMaxHitPoints,
+                      'temporaryHitPoints': newTemporaryHitPoints,
                     });
                   },
                   child: Text('确认'),

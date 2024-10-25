@@ -32,7 +32,7 @@ class CharacterDetailsWidget extends StatelessWidget {
       '战士',
       '法师',
       '牧师',
-      '盗贼',
+      '游荡者',
       '游侠',
       '术士',
       '圣武士',
@@ -40,7 +40,8 @@ class CharacterDetailsWidget extends StatelessWidget {
       '野蛮人',
       '吟游诗人',
       '武僧',
-      '秘术师'
+      '邪术师',
+      '奇械师'
     ];
     final List<String> backgroundOptions = [
       '平民英雄',
@@ -100,16 +101,28 @@ class CharacterDetailsWidget extends StatelessWidget {
         return SimpleDialog(
           title:
               Text('选择$title', style: Theme.of(context).textTheme.titleLarge),
-          children: options
-              .map((String value) => SimpleDialogOption(
-                    onPressed: () {
-                      _updateCharacterAttribute(context, title, value);
-                      Navigator.pop(context);
-                    },
-                    child: Text(value,
-                        style: Theme.of(context).textTheme.bodyMedium),
-                  ))
-              .toList(),
+          children: [
+            ...options.map((String value) => SimpleDialogOption(
+                  onPressed: () {
+                    _updateCharacterAttribute(context, title, value);
+                    Navigator.pop(context);
+                  },
+                  child: Text(value,
+                      style: Theme.of(context).textTheme.bodyMedium),
+                )),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: '手动输入$title',
+                ),
+                onSubmitted: (String value) {
+                  _updateCharacterAttribute(context, title, value);
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          ],
         );
       },
     );

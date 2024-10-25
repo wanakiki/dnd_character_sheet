@@ -100,6 +100,9 @@ class CharacterManager extends ChangeNotifier {
     if (attribute.containsKey('backpack')) {
       _character.backpack = attribute['backpack'];
     }
+    if (attribute.containsKey('temporaryHitPoints')) {
+      _character.temporaryHitPoints = attribute['temporaryHitPoints'];
+    }
     notifyListeners();
     _saveCharacter();
   }

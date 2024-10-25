@@ -12,6 +12,7 @@ class ExperienceBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final int nextLevelXP = _experienceForNextLevel(currentLevel);
     final double progress = currentExperience / nextLevelXP;
+    final int proficiencyBonus = _proficiencyBonusForLevel(currentLevel);
 
     return InkWell(
       onTap: () => _showExperienceInputDialog(context),
@@ -27,7 +28,8 @@ class ExperienceBar extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8),
-          Text('经验值: $currentExperience / $nextLevelXP'),
+          Text(
+              'XP: $currentExperience / $nextLevelXP | LV: $currentLevel | +$proficiencyBonus'),
         ],
       ),
     );
@@ -59,6 +61,15 @@ class ExperienceBar extends StatelessWidget {
     return (level > 0 && level < 20)
         ? xpThresholds[level - 1]
         : xpThresholds.last;
+  }
+
+  int _proficiencyBonusForLevel(int level) {
+    if (level >= 1 && level <= 4) return 2;
+    if (level >= 5 && level <= 8) return 3;
+    if (level >= 9 && level <= 12) return 4;
+    if (level >= 13 && level <= 16) return 5;
+    if (level >= 17 && level <= 20) return 6;
+    return 2; // Default value for level 1
   }
 
   void _showExperienceInputDialog(BuildContext context) {

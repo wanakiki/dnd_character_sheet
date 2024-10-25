@@ -16,7 +16,7 @@ class AttributeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int modifier = (value - 10) ~/ 2;
+    final int modifier = value >= 10 ? (value - 10) ~/ 2 : (value - 11) ~/ 2;
     final textTheme = Theme.of(context).textTheme;
 
     return Card(

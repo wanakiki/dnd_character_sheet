@@ -23,6 +23,7 @@ class Character {
   List<int> attributes; // 六维属性列表，顺序为：力量、敏捷、体质、智力、感知、魅力
   int currentHitPoints;
   int maxHitPoints;
+  int temporaryHitPoints; // 新增临时生命值属性
   int armorClass;
   int initiative;
   int speed;
@@ -44,6 +45,7 @@ class Character {
     required this.attributes,
     required this.currentHitPoints,
     required this.maxHitPoints,
+    this.temporaryHitPoints = 0, // 初始化临时生命值
     required this.armorClass,
     required this.initiative,
     required this.speed,
@@ -67,6 +69,7 @@ class Character {
       attributes: List<int>.from(json['attributes']),
       currentHitPoints: json['currentHitPoints'],
       maxHitPoints: json['maxHitPoints'],
+      temporaryHitPoints: json['temporaryHitPoints'] ?? 0, // 从JSON中获取临时生命值
       armorClass: json['armorClass'],
       initiative: json['initiative'],
       speed: json['speed'],
@@ -100,6 +103,7 @@ class Character {
       'attributes': attributes,
       'currentHitPoints': currentHitPoints,
       'maxHitPoints': maxHitPoints,
+      'temporaryHitPoints': temporaryHitPoints, // 将临时生命值转换为JSON
       'armorClass': armorClass,
       'initiative': initiative,
       'speed': speed,
@@ -124,7 +128,7 @@ class Character {
         'Level: $level\n'
         'Experience Points: $experiencePoints\n'
         'Attributes: $attributes\n'
-        'HP: $currentHitPoints/$maxHitPoints, AC: $armorClass, Initiative: $initiative, Speed: $speed\n'
+        'HP: $currentHitPoints/$maxHitPoints, Temporary HP: $temporaryHitPoints, AC: $armorClass, Initiative: $initiative, Speed: $speed\n' // 添加临时生命值到字符串表示
         'Coin (Gold, Silver, Copper): ${coin[0]}, ${coin[1]}, ${coin[2]}\n'
         'Avatar: $avatarUrl\n'
         'Dice Bag: ${diceBag.map((diceSet) => diceSet.toString()).join(', ')}\n'
@@ -146,6 +150,7 @@ class Character {
       attributes: [10, 10, 10, 10, 10, 10], // 初始化六维属性
       currentHitPoints: 8,
       maxHitPoints: 10,
+      temporaryHitPoints: 0, // 初始化临时生命值
       armorClass: 10,
       initiative: 10,
       speed: 30,
@@ -157,7 +162,7 @@ class Character {
       backpack: [
         Item(name: 'Sword', quantity: 1, description: 'A sharp blade')
       ], // 初始化空背包
-      skills: ['体质豁免'],
+      skills: ['体质 - 豁免'],
       expertise: [ExpertiseItem(name: '一种乐器', description: '长笛')], // 初始化专长
     );
   }
@@ -174,6 +179,7 @@ class Character {
     List<int>? attributes,
     int? currentHitPoints,
     int? maxHitPoints,
+    int? temporaryHitPoints, // 添加临时生命值到copyWith方法
     int? armorClass,
     int? initiative,
     int? speed,
@@ -195,6 +201,8 @@ class Character {
       attributes: attributes ?? this.attributes,
       currentHitPoints: currentHitPoints ?? this.currentHitPoints,
       maxHitPoints: maxHitPoints ?? this.maxHitPoints,
+      temporaryHitPoints:
+          temporaryHitPoints ?? this.temporaryHitPoints, // 添加临时生命值到copyWith方法
       armorClass: armorClass ?? this.armorClass,
       initiative: initiative ?? this.initiative,
       speed: speed ?? this.speed,

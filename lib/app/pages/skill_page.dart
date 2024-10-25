@@ -170,6 +170,7 @@ class _AddSkillOrExpertiseDialogState extends State<AddSkillOrExpertiseDialog> {
   String? _selectedSkill;
 
   final List<String> _skills = [
+    '体质 - 豁免',
     '力量 - 运动',
     '力量 - 豁免',
     '敏捷 - 特技',

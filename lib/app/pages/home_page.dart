@@ -204,7 +204,9 @@ class _CharacterDisplayScreenState extends State<CharacterDisplayScreen> {
                           children: [
                             HealthBar(
                                 currentHitPoints: character.currentHitPoints,
-                                maxHitPoints: character.maxHitPoints),
+                                maxHitPoints: character.maxHitPoints,
+                                temporaryHitPoints:
+                                    character.temporaryHitPoints),
                             const SizedBox(height: 10),
                             ExperienceBar(
                                 currentExperience: character.experiencePoints,

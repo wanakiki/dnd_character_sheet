@@ -114,6 +114,11 @@ const CharacterSchema = CollectionSchema(
       id: 18,
       name: r'speed',
       type: IsarType.long,
+    ),
+    r'temporaryHitPoints': PropertySchema(
+      id: 19,
+      name: r'temporaryHitPoints',
+      type: IsarType.long,
     )
   },
   estimateSize: _characterEstimateSize,
@@ -237,6 +242,7 @@ void _characterSerialize(
   writer.writeString(offsets[16], object.race);
   writer.writeStringList(offsets[17], object.skills);
   writer.writeLong(offsets[18], object.speed);
+  writer.writeLong(offsets[19], object.temporaryHitPoints);
 }
 
 Character _characterDeserialize(
@@ -283,6 +289,7 @@ Character _characterDeserialize(
     race: reader.readString(offsets[16]),
     skills: reader.readStringList(offsets[17]) ?? const [],
     speed: reader.readLong(offsets[18]),
+    temporaryHitPoints: reader.readLongOrNull(offsets[19]) ?? 0,
   );
   object.id = id;
   return object;
@@ -351,6 +358,8 @@ P _characterDeserializeProp<P>(
       return (reader.readStringList(offset) ?? const []) as P;
     case 18:
       return (reader.readLong(offset)) as P;
+    case 19:
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -2543,6 +2552,62 @@ extension CharacterQueryFilter
       ));
     });
   }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      temporaryHitPointsEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'temporaryHitPoints',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      temporaryHitPointsGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'temporaryHitPoints',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      temporaryHitPointsLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'temporaryHitPoints',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      temporaryHitPointsBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'temporaryHitPoints',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
 }
 
 extension CharacterQueryObject
@@ -2730,6 +2795,19 @@ extension CharacterQuerySortBy on QueryBuilder<Character, Character, QSortBy> {
       return query.addSortBy(r'speed', Sort.desc);
     });
   }
+
+  QueryBuilder<Character, Character, QAfterSortBy> sortByTemporaryHitPoints() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'temporaryHitPoints', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterSortBy>
+      sortByTemporaryHitPointsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'temporaryHitPoints', Sort.desc);
+    });
+  }
 }
 
 extension CharacterQuerySortThenBy
@@ -2903,6 +2981,19 @@ extension CharacterQuerySortThenBy
       return query.addSortBy(r'speed', Sort.desc);
     });
   }
+
+  QueryBuilder<Character, Character, QAfterSortBy> thenByTemporaryHitPoints() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'temporaryHitPoints', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterSortBy>
+      thenByTemporaryHitPointsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'temporaryHitPoints', Sort.desc);
+    });
+  }
 }
 
 extension CharacterQueryWhereDistinct
@@ -3007,6 +3098,12 @@ extension CharacterQueryWhereDistinct
   QueryBuilder<Character, Character, QDistinct> distinctBySpeed() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'speed');
+    });
+  }
+
+  QueryBuilder<Character, Character, QDistinct> distinctByTemporaryHitPoints() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'temporaryHitPoints');
     });
   }
 }
@@ -3131,6 +3228,12 @@ extension CharacterQueryProperty
   QueryBuilder<Character, int, QQueryOperations> speedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'speed');
+    });
+  }
+
+  QueryBuilder<Character, int, QQueryOperations> temporaryHitPointsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'temporaryHitPoints');
     });
   }
 }
