@@ -5,6 +5,7 @@ import 'package:dnd_character/app/data/diceset.dart';
 import 'package:isar/isar.dart';
 import 'items.dart';
 import 'expertise_item.dart';
+import 'spell.dart';
 
 part 'character.g.dart';
 
@@ -33,6 +34,7 @@ class Character {
   List<Item> backpack; // 新增背包属性
   List<String> skills; // 新增技能属性
   List<ExpertiseItem> expertise; // 新增专长属性
+  List<String> favoriteSpells = []; // New property to store favorite spells
 
   Character({
     required this.name,
@@ -55,6 +57,7 @@ class Character {
     this.backpack = const [], // 初始化背包
     this.skills = const [], // 初始化技能
     this.expertise = const [], // 初始化专长
+    this.favoriteSpells = const [], // Initialize with an empty list
   });
 
   factory Character.fromJson(Map<String, dynamic> json) {
@@ -88,6 +91,10 @@ class Character {
               ?.map((e) => ExpertiseItem.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [], // 从JSON中获取专长
+      favoriteSpells: (json['favoriteSpells'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
     );
   }
 
@@ -115,6 +122,7 @@ class Character {
       'expertise': expertise
           .map((expertiseItem) => expertiseItem.toJson())
           .toList(), // 将专长转换为JSON
+      'favoriteSpells': favoriteSpells,
     };
   }
 
@@ -164,6 +172,7 @@ class Character {
       ], // 初始化空背包
       skills: ['体质 - 豁免'],
       expertise: [ExpertiseItem(name: '一种乐器', description: '长笛')], // 初始化专长
+      favoriteSpells: const [], // Initialize with an empty list
     );
   }
 
@@ -189,6 +198,7 @@ class Character {
     List<Item>? backpack,
     List<String>? skills,
     List<ExpertiseItem>? expertise,
+    List<String>? favoriteSpells,
   }) {
     return Character(
       name: name ?? this.name,
@@ -212,6 +222,7 @@ class Character {
       backpack: backpack ?? this.backpack,
       skills: skills ?? this.skills, // 添加技能到copyWith方法
       expertise: expertise ?? this.expertise, // 添加专长到copyWith方法
+      favoriteSpells: favoriteSpells ?? this.favoriteSpells,
     );
   }
 }

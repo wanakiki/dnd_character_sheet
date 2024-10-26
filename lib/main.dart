@@ -1,16 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:dnd_character/app/pages/home_page.dart';
-import 'package:dnd_character/app/data/character_manager.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:dnd_character/app/pages/skill_page.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+import 'app/pages/home_page.dart';
+import 'app/data/spell.dart';
+import 'app/data/character_manager.dart';
+import 'app/data/character.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final isar = await initializeDatabase();
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => CharacterManager(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (context) => CharacterManager(isar: isar)),
+        Provider<Isar>.value(value: isar), // Provide the Isar instance
+      ],
       child: MyApp(),
     ),
   );
+}
+
+Future<Isar> initializeDatabase() async {
+  final dir = await getApplicationDocumentsDirectory();
+  final isar = await Isar.open(
+    [SpellSchema, CharacterSchema], // Include all necessary schemas
+    directory: dir.path,
+  );
+
+  // Check if the database is empty
+  final existingSpells = await isar.spells.where().findAll();
+  if (existingSpells.isEmpty) {
+    // Import JSON data if the database is empty
+    final jsonString = await rootBundle.loadString('assets/spells.json');
+    final List<Map<String, dynamic>> jsonData =
+        List<Map<String, dynamic>>.from(json.decode(jsonString));
+
+    await isar.writeTxn(() async {
+      await isar.spells.importJson(jsonData);
+    });
+  }
+
+  return isar;
 }
 
 class MyApp extends StatelessWidget {

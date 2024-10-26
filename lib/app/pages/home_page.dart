@@ -18,6 +18,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:dnd_character/app/pages/spell_collection_page.dart';
 
 class CharacterDisplayScreen extends StatefulWidget {
   CharacterDisplayScreen({super.key});
@@ -243,6 +244,16 @@ class _CharacterDisplayScreenState extends State<CharacterDisplayScreen> {
                                   builder: (context) => BackpackPage()));
                         },
                         child: Text('背包'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      SpellCollectionScreen()));
+                        },
+                        child: Text('法术收藏'),
                       ),
                     ],
                   ),

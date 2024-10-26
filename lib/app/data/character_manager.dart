@@ -8,32 +8,19 @@ import 'expertise_item.dart';
 
 class CharacterManager extends ChangeNotifier {
   late Character _character;
-  late final Isar isar;
+  final Isar isar;
 
-  CharacterManager() {
+  CharacterManager({required this.isar}) {
     _character = Character.empty();
-    _initDatabase();
-  }
-
-  Future<void> _initDatabase() async {
-    final dir = await getApplicationDocumentsDirectory();
-    isar = await Isar.open(
-      [CharacterSchema],
-      directory: dir.path,
-    );
     _loadCharacter();
   }
 
-  // 从数据库加载角色
   Future<void> _loadCharacter() async {
-    // 获取character 变量
     final character = await isar.characters.get(1);
-    // 判断是否存在
     if (character != null) {
       _character = character;
       _saveCharacter();
     } else {
-      _character = Character.empty();
       _saveCharacter();
     }
     notifyListeners();
@@ -102,6 +89,9 @@ class CharacterManager extends ChangeNotifier {
     }
     if (attribute.containsKey('temporaryHitPoints')) {
       _character.temporaryHitPoints = attribute['temporaryHitPoints'];
+    }
+    if (attribute.containsKey('skills')) {
+      _character.skills = attribute['skills'];
     }
     notifyListeners();
     _saveCharacter();
@@ -214,4 +204,20 @@ class CharacterManager extends ChangeNotifier {
   }
 
   Character get character => _character;
+
+  void addFavoriteSpell(String spellName) {
+    if (!_character.favoriteSpells.contains(spellName)) {
+      _character.favoriteSpells = [..._character.favoriteSpells, spellName];
+      notifyListeners();
+      _saveCharacter();
+    }
+  }
+
+  void removeFavoriteSpell(String spellName) {
+    if (_character.favoriteSpells.contains(spellName)) {
+      _character.favoriteSpells.remove(spellName);
+      notifyListeners();
+      _saveCharacter();
+    }
+  }
 }
