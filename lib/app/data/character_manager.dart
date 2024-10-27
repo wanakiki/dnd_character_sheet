@@ -220,4 +220,27 @@ class CharacterManager extends ChangeNotifier {
       _saveCharacter();
     }
   }
+
+  Future<List<Character>> fetchAllCharacters() async {
+    return await isar.characters.where().findAll();
+  }
+
+  Future<void> deleteCharacter(int characterId) async {
+    await isar.writeTxn(() async {
+      await isar.characters.delete(characterId);
+    });
+    notifyListeners();
+  }
+
+  void setCurrentCharacter(Character character) {
+    _character = character;
+    notifyListeners();
+  }
+
+  Future<void> addCharacter(Character character) async {
+    await isar.writeTxn(() async {
+      await isar.characters.put(character);
+    });
+    notifyListeners();
+  }
 }

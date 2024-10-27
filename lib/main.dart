@@ -8,6 +8,7 @@ import 'app/pages/home_page.dart';
 import 'app/data/spell.dart';
 import 'app/data/character_manager.dart';
 import 'app/data/character.dart';
+import 'app/pages/switch_character_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +56,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: CharacterDisplayScreen(),
+      routes: {
+        '/': (context) => CharacterDisplayScreen(),
+        '/switch_character': (context) => SwitchCharacterScreen(),
+      },
     );
   }
 }

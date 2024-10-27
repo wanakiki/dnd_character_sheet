@@ -80,43 +80,48 @@ const CharacterSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'ExpertiseItem',
     ),
-    r'initiative': PropertySchema(
+    r'favoriteSpells': PropertySchema(
       id: 12,
+      name: r'favoriteSpells',
+      type: IsarType.stringList,
+    ),
+    r'initiative': PropertySchema(
+      id: 13,
       name: r'initiative',
       type: IsarType.long,
     ),
     r'level': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'level',
       type: IsarType.long,
     ),
     r'maxHitPoints': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'maxHitPoints',
       type: IsarType.long,
     ),
     r'name': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'name',
       type: IsarType.string,
     ),
     r'race': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'race',
       type: IsarType.string,
     ),
     r'skills': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'skills',
       type: IsarType.stringList,
     ),
     r'speed': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'speed',
       type: IsarType.long,
     ),
     r'temporaryHitPoints': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'temporaryHitPoints',
       type: IsarType.long,
     )
@@ -190,6 +195,13 @@ int _characterEstimateSize(
           ExpertiseItemSchema.estimateSize(value, offsets, allOffsets);
     }
   }
+  bytesCount += 3 + object.favoriteSpells.length * 3;
+  {
+    for (var i = 0; i < object.favoriteSpells.length; i++) {
+      final value = object.favoriteSpells[i];
+      bytesCount += value.length * 3;
+    }
+  }
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.race.length * 3;
   bytesCount += 3 + object.skills.length * 3;
@@ -235,14 +247,15 @@ void _characterSerialize(
     ExpertiseItemSchema.serialize,
     object.expertise,
   );
-  writer.writeLong(offsets[12], object.initiative);
-  writer.writeLong(offsets[13], object.level);
-  writer.writeLong(offsets[14], object.maxHitPoints);
-  writer.writeString(offsets[15], object.name);
-  writer.writeString(offsets[16], object.race);
-  writer.writeStringList(offsets[17], object.skills);
-  writer.writeLong(offsets[18], object.speed);
-  writer.writeLong(offsets[19], object.temporaryHitPoints);
+  writer.writeStringList(offsets[12], object.favoriteSpells);
+  writer.writeLong(offsets[13], object.initiative);
+  writer.writeLong(offsets[14], object.level);
+  writer.writeLong(offsets[15], object.maxHitPoints);
+  writer.writeString(offsets[16], object.name);
+  writer.writeString(offsets[17], object.race);
+  writer.writeStringList(offsets[18], object.skills);
+  writer.writeLong(offsets[19], object.speed);
+  writer.writeLong(offsets[20], object.temporaryHitPoints);
 }
 
 Character _characterDeserialize(
@@ -282,14 +295,15 @@ Character _characterDeserialize(
           ExpertiseItem(),
         ) ??
         const [],
-    initiative: reader.readLong(offsets[12]),
-    level: reader.readLongOrNull(offsets[13]) ?? 1,
-    maxHitPoints: reader.readLong(offsets[14]),
-    name: reader.readString(offsets[15]),
-    race: reader.readString(offsets[16]),
-    skills: reader.readStringList(offsets[17]) ?? const [],
-    speed: reader.readLong(offsets[18]),
-    temporaryHitPoints: reader.readLongOrNull(offsets[19]) ?? 0,
+    favoriteSpells: reader.readStringList(offsets[12]) ?? const [],
+    initiative: reader.readLong(offsets[13]),
+    level: reader.readLongOrNull(offsets[14]) ?? 1,
+    maxHitPoints: reader.readLong(offsets[15]),
+    name: reader.readString(offsets[16]),
+    race: reader.readString(offsets[17]),
+    skills: reader.readStringList(offsets[18]) ?? const [],
+    speed: reader.readLong(offsets[19]),
+    temporaryHitPoints: reader.readLongOrNull(offsets[20]) ?? 0,
   );
   object.id = id;
   return object;
@@ -345,20 +359,22 @@ P _characterDeserializeProp<P>(
           ) ??
           const []) as P;
     case 12:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringList(offset) ?? const []) as P;
     case 13:
-      return (reader.readLongOrNull(offset) ?? 1) as P;
-    case 14:
       return (reader.readLong(offset)) as P;
+    case 14:
+      return (reader.readLongOrNull(offset) ?? 1) as P;
     case 15:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 16:
       return (reader.readString(offset)) as P;
     case 17:
-      return (reader.readStringList(offset) ?? const []) as P;
+      return (reader.readString(offset)) as P;
     case 18:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringList(offset) ?? const []) as P;
     case 19:
+      return (reader.readLong(offset)) as P;
+    case 20:
       return (reader.readLongOrNull(offset) ?? 0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1803,6 +1819,232 @@ extension CharacterQueryFilter
     });
   }
 
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'favoriteSpells',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'favoriteSpells',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'favoriteSpells',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'favoriteSpells',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'favoriteSpells',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'favoriteSpells',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'favoriteSpells',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsElementMatches(String pattern,
+          {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'favoriteSpells',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'favoriteSpells',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'favoriteSpells',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'favoriteSpells',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'favoriteSpells',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'favoriteSpells',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'favoriteSpells',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'favoriteSpells',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      favoriteSpellsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'favoriteSpells',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<Character, Character, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -3057,6 +3299,12 @@ extension CharacterQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Character, Character, QDistinct> distinctByFavoriteSpells() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'favoriteSpells');
+    });
+  }
+
   QueryBuilder<Character, Character, QDistinct> distinctByInitiative() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'initiative');
@@ -3186,6 +3434,13 @@ extension CharacterQueryProperty
       expertiseProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'expertise');
+    });
+  }
+
+  QueryBuilder<Character, List<String>, QQueryOperations>
+      favoriteSpellsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'favoriteSpells');
     });
   }
 

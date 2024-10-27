@@ -19,6 +19,7 @@ import 'dart:convert';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dnd_character/app/pages/spell_collection_page.dart';
+import 'package:dnd_character/app/widgets/app_drawer_widget.dart';
 
 class CharacterDisplayScreen extends StatefulWidget {
   CharacterDisplayScreen({super.key});
@@ -95,7 +96,11 @@ class _CharacterDisplayScreenState extends State<CharacterDisplayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('角色展示'),
+        title: Consumer<CharacterManager>(
+          builder: (context, manager, child) {
+            return Text(manager.character.name);
+          },
+        ),
         actions: [
           IconButton(
             icon: Icon(_isEditMode ? Icons.check : Icons.edit),
@@ -112,6 +117,7 @@ class _CharacterDisplayScreenState extends State<CharacterDisplayScreen> {
           ),
         ],
       ),
+      drawer: AppDrawerWidget(),
       body: Consumer<CharacterManager>(
         builder: (context, manager, child) {
           final Character character = manager.character;

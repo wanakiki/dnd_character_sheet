@@ -172,7 +172,7 @@ class Character {
       ], // 初始化空背包
       skills: ['体质 - 豁免'],
       expertise: [ExpertiseItem(name: '一种乐器', description: '长笛')], // 初始化专长
-      favoriteSpells: const [], // Initialize with an empty list
+      favoriteSpells: [], // Initialize with an empty list
     );
   }
 

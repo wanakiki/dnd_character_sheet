@@ -13,7 +13,7 @@ A Dungeons & Dragons character sheet app built with Flutter. Designed to replace
 ## TODO
 
 - [x] Data persistence storage
-- [ ] Proficiency and corresponding advantage/disadvantage checks
+- [x] Proficiency and corresponding advantage/disadvantage checks
 - [ ] Campaign notes
-- [ ] Spellbook
+- [x] Spellbook
 - [ ] Quick consumables bar
