@@ -7,6 +7,8 @@
 flutter pub run build_runner build
 
 flutter build apk --release
+adb install build/app/outputs/flutter-apk/app-release.apk
+
 
 生成图标 flutter pub run flutter_launcher_icons:main
 

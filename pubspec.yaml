@@ -47,6 +47,7 @@ dependencies:
     version: 3.1.7
   permission_handler: ^11.3.1
   file_picker: ^5.0.0
+  url_launcher: ^6.0.20
 
   
 

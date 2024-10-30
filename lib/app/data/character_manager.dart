@@ -226,9 +226,22 @@ class CharacterManager extends ChangeNotifier {
   }
 
   Future<void> deleteCharacter(int characterId) async {
-    await isar.writeTxn(() async {
-      await isar.characters.delete(characterId);
-    });
+    if (_character.id == characterId) {
+      await isar.writeTxn(() async {
+        await isar.characters.delete(characterId);
+      });
+      final allCharacters = await fetchAllCharacters();
+      if (allCharacters.isNotEmpty) {
+        setCurrentCharacter(allCharacters.first);
+      } else {
+        setCurrentCharacter(Character.empty());
+        _saveCharacter();
+      }
+    } else {
+      await isar.writeTxn(() async {
+        await isar.characters.delete(characterId);
+      });
+    }
     notifyListeners();
   }
 

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:convert';
+import 'dart:io';
 import '../data/character.dart';
 import '../data/character_manager.dart';
 
@@ -96,14 +99,54 @@ class _SwitchCharacterScreenState extends State<SwitchCharacterScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddCharacterDialog(context);
-        },
-        child: Icon(Icons.add),
-        tooltip: '新增角色',
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            heroTag: 'addCharacter',
+            onPressed: () {
+              _showAddCharacterDialog(context);
+            },
+            child: Icon(Icons.add),
+            tooltip: '新增角色',
+          ),
+          SizedBox(height: 10),
+          FloatingActionButton(
+            heroTag: 'importCharacter',
+            onPressed: () => _importCharacter(context),
+            child: Icon(Icons.file_upload),
+            tooltip: '导入角色',
+          ),
+        ],
       ),
     );
+  }
+
+  Future<void> _importCharacter(BuildContext context) async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+      );
+
+      if (result != null) {
+        String filePath = result.files.single.path!;
+        String jsonString = await File(filePath).readAsString();
+        Map<String, dynamic> characterData = jsonDecode(jsonString);
+
+        await Provider.of<CharacterManager>(context, listen: false)
+            .addCharacter(Character.fromJson(characterData));
+
+        setState(() {}); // Refresh the UI after importing
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('角色导入成功')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('导入角色失败: $e')),
+      );
+    }
   }
 
   void _showAddCharacterDialog(BuildContext context) {

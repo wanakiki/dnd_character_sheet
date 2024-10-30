@@ -37,6 +37,8 @@ class AppDrawerWidget extends StatelessWidget {
               title: Text('设置', style: TextStyle(color: Colors.white)),
               onTap: () {
                 // Navigate to settings
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, '/setting');
               },
             ),
             ListTile(
@@ -44,6 +46,8 @@ class AppDrawerWidget extends StatelessWidget {
               title: Text('关于', style: TextStyle(color: Colors.white)),
               onTap: () {
                 // Navigate to about
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, '/about');
               },
             ),
           ],
