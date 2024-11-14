@@ -12,19 +12,22 @@ import 'app/pages/switch_character_page.dart';
 import 'app/pages/setting_page.dart';
 import 'app/pages/about_page.dart';
 
+import 'streaming_asr/main.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final isar = await initializeDatabase();
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (context) => CharacterManager(isar: isar)),
-        Provider<Isar>.value(value: isar), // Provide the Isar instance
-      ],
-      child: MyApp(),
-    ),
-  );
+  // runApp(
+  //   MultiProvider(
+  //     providers: [
+  //       ChangeNotifierProvider(
+  //           create: (context) => CharacterManager(isar: isar)),
+  //       Provider<Isar>.value(value: isar), // Provide the Isar instance
+  //     ],
+  //     child: MyApp(),
+  //   ),
+  // );
+  runApp(MyApp_asr());
 }
 
 Future<Isar> initializeDatabase() async {

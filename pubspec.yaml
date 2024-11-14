@@ -48,7 +48,11 @@ dependencies:
   permission_handler: ^11.3.1
   file_picker: ^5.0.0
   url_launcher: ^6.0.20
+  sherpa_onnx: ^1.10.30
+  record: ^5.2.0
 
+dependency_overrides:
+  record_android: 1.2.6
   
 
 dev_dependencies:
@@ -81,6 +85,7 @@ flutter:
     - assets/character.jpg
     - assets/d20.png
     - assets/spells.json
+    - assets/sherpa-onnx-streaming-zipformer-zh-14M-2023-02-23-mobile/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
