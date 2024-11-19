@@ -47,11 +47,12 @@ class CharacterDetailsWidget extends StatelessWidget {
       '平民英雄',
       '贵族',
       '士兵',
-      '流浪者',
+      '流浪儿',
       '学者',
       '工匠',
       '罪犯',
-      '牧民'
+      '化外之民',
+      '侍僧'
     ];
     final List<String> alignmentOptions = [
       '守序善良',

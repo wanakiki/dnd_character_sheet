@@ -88,27 +88,31 @@ class HealthBar extends StatelessWidget {
                       });
                     },
                   ),
-                  Slider(
-                    value: newHitPoints.toDouble(),
-                    min: 0,
-                    max: newMaxHitPoints.toDouble(),
-                    divisions: newMaxHitPoints,
-                    label: newHitPoints.toString(),
-                    onChanged: (value) {
-                      setState(() {
-                        newHitPoints = value.toInt();
-                      });
-                    },
-                  ),
-                  Text(
-                    '调整: ${newHitPoints - currentHitPoints}',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: newHitPoints > currentHitPoints
-                          ? Colors.green
-                          : Colors.red,
-                    ),
-                  ),
+                  Row(
+                    children: [
+                      Text(
+                        '调整: ${newHitPoints - currentHitPoints}',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: newHitPoints > currentHitPoints
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                      ),
+                      Slider(
+                        value: newHitPoints.toDouble(),
+                        min: 0,
+                        max: newMaxHitPoints.toDouble(),
+                        divisions: newMaxHitPoints,
+                        label: newHitPoints.toString(),
+                        onChanged: (value) {
+                          setState(() {
+                            newHitPoints = value.toInt();
+                          });
+                        },
+                      ),
+                    ],
+                  )
                 ],
               ),
               actions: [

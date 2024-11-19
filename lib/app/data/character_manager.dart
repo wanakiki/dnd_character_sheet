@@ -36,6 +36,8 @@ class CharacterManager extends ChangeNotifier {
       } else {
         _saveCharacter();
       }
+    } else {
+      _saveCharacter();
     }
     notifyListeners();
   }
