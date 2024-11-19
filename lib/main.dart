@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'app/pages/home_page.dart';
 import 'app/data/spell.dart';
 import 'app/data/character_manager.dart';
@@ -11,15 +12,20 @@ import 'app/data/character.dart';
 import 'app/pages/switch_character_page.dart';
 import 'app/pages/setting_page.dart';
 import 'app/pages/about_page.dart';
+import 'app/setting/app_pref.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final isar = await initializeDatabase();
+  final prefs = await SharedPreferences.getInstance();
+  final appPrefs = AppPreferences(prefs);
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (context) => CharacterManager(isar: isar)),
+            create: (context) =>
+                CharacterManager(isar: isar, appPrefs: appPrefs)),
         Provider<Isar>.value(value: isar), // Provide the Isar instance
       ],
       child: MyApp(),

@@ -1,3 +1,4 @@
+import 'package:dnd_character/app/setting/app_pref.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dnd_character/app/data/character.dart';
 import 'diceset.dart';
@@ -9,19 +10,32 @@ import 'expertise_item.dart';
 class CharacterManager extends ChangeNotifier {
   late Character _character;
   final Isar isar;
+  final AppPreferences appPrefs;
 
-  CharacterManager({required this.isar}) {
+  CharacterManager({required this.isar, required this.appPrefs}) {
     _character = Character.empty();
     _loadCharacter();
   }
 
+  // Future<void> _loadCharacter() async {
+  //   final character = await isar.characters.get(1);
+  //   if (character != null) {
+  //     _character = character;
+  //   } else {
+  //     _saveCharacter();
+  //   }
+  //   notifyListeners();
+  // }
+
   Future<void> _loadCharacter() async {
-    final character = await isar.characters.get(1);
-    if (character != null) {
-      _character = character;
-      _saveCharacter();
-    } else {
-      _saveCharacter();
+    final lastCharacterId = appPrefs.getLastCharacterId();
+    if (lastCharacterId != null) {
+      final character = await await isar.characters.get(lastCharacterId);
+      if (character != null) {
+        _character = character;
+      } else {
+        _saveCharacter();
+      }
     }
     notifyListeners();
   }
@@ -245,8 +259,9 @@ class CharacterManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setCurrentCharacter(Character character) {
+  Future<void> setCurrentCharacter(Character character) async {
     _character = character;
+    await appPrefs.saveLastCharacterId(_character.id);
     notifyListeners();
   }
 

@@ -51,14 +51,19 @@ class Character {
     required this.armorClass,
     required this.initiative,
     required this.speed,
-    this.coin = const [0, 0, 0],
+    List<int>? coin,
     this.avatarUrl = '',
-    this.diceBag = const [], // 初始化骰子袋
-    this.backpack = const [], // 初始化背包
-    this.skills = const [], // 初始化技能
-    this.expertise = const [], // 初始化专长
-    this.favoriteSpells = const [], // Initialize with an empty list
-  });
+    List<DiceSet>? diceBag,
+    List<Item>? backpack,
+    List<String>? skills,
+    List<ExpertiseItem>? expertise,
+    List<String>? favoriteSpells,
+  })  : coin = coin?.toList() ?? [0, 0, 0],
+        diceBag = diceBag?.toList() ?? [],
+        backpack = backpack?.toList() ?? [],
+        skills = skills?.toList() ?? [],
+        expertise = expertise?.toList() ?? [],
+        favoriteSpells = favoriteSpells?.toList() ?? [];
 
   factory Character.fromJson(Map<String, dynamic> json) {
     return Character(
@@ -91,10 +96,7 @@ class Character {
               ?.map((e) => ExpertiseItem.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [], // 从JSON中获取专长
-      favoriteSpells: (json['favoriteSpells'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
+      favoriteSpells: List<String>.from(json['favoriteSpells'] ?? []),
     );
   }
 
