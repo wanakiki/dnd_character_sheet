@@ -20,6 +20,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dnd_character/app/pages/spell_collection_page.dart';
 import 'package:dnd_character/app/widgets/app_drawer_widget.dart';
+import 'package:dnd_character/app/widgets/consumable_widget.dart';
 
 class CharacterDisplayScreen extends StatefulWidget {
   CharacterDisplayScreen({super.key});
@@ -208,6 +209,7 @@ class _CharacterDisplayScreenState extends State<CharacterDisplayScreen> {
                         !_isEditMode, // Disable interaction when not in edit mode
                     child: AttributesDisplay(attributes: character.attributes),
                   ),
+                  ConsumableWidget(),
                   Row(
                     children: [
                       Expanded(

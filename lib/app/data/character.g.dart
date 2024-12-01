@@ -58,70 +58,76 @@ const CharacterSchema = CollectionSchema(
       name: r'coin',
       type: IsarType.longList,
     ),
-    r'currentHitPoints': PropertySchema(
+    r'consumables': PropertySchema(
       id: 8,
+      name: r'consumables',
+      type: IsarType.objectList,
+      target: r'Consumable',
+    ),
+    r'currentHitPoints': PropertySchema(
+      id: 9,
       name: r'currentHitPoints',
       type: IsarType.long,
     ),
     r'diceBag': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'diceBag',
       type: IsarType.objectList,
       target: r'DiceSet',
     ),
     r'experiencePoints': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'experiencePoints',
       type: IsarType.long,
     ),
     r'expertise': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'expertise',
       type: IsarType.objectList,
       target: r'ExpertiseItem',
     ),
     r'favoriteSpells': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'favoriteSpells',
       type: IsarType.stringList,
     ),
     r'initiative': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'initiative',
       type: IsarType.long,
     ),
     r'level': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'level',
       type: IsarType.long,
     ),
     r'maxHitPoints': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'maxHitPoints',
       type: IsarType.long,
     ),
     r'name': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'name',
       type: IsarType.string,
     ),
     r'race': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'race',
       type: IsarType.string,
     ),
     r'skills': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'skills',
       type: IsarType.stringList,
     ),
     r'speed': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'speed',
       type: IsarType.long,
     ),
     r'temporaryHitPoints': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'temporaryHitPoints',
       type: IsarType.long,
     )
@@ -150,7 +156,8 @@ const CharacterSchema = CollectionSchema(
   embeddedSchemas: {
     r'DiceSet': DiceSetSchema,
     r'Item': ItemSchema,
-    r'ExpertiseItem': ExpertiseItemSchema
+    r'ExpertiseItem': ExpertiseItemSchema,
+    r'Consumable': ConsumableSchema
   },
   getId: _characterGetId,
   getLinks: _characterGetLinks,
@@ -178,6 +185,14 @@ int _characterEstimateSize(
   }
   bytesCount += 3 + object.characterClass.length * 3;
   bytesCount += 3 + object.coin.length * 8;
+  bytesCount += 3 + object.consumables.length * 3;
+  {
+    final offsets = allOffsets[Consumable]!;
+    for (var i = 0; i < object.consumables.length; i++) {
+      final value = object.consumables[i];
+      bytesCount += ConsumableSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
   bytesCount += 3 + object.diceBag.length * 3;
   {
     final offsets = allOffsets[DiceSet]!;
@@ -233,29 +248,35 @@ void _characterSerialize(
   );
   writer.writeString(offsets[6], object.characterClass);
   writer.writeLongList(offsets[7], object.coin);
-  writer.writeLong(offsets[8], object.currentHitPoints);
+  writer.writeObjectList<Consumable>(
+    offsets[8],
+    allOffsets,
+    ConsumableSchema.serialize,
+    object.consumables,
+  );
+  writer.writeLong(offsets[9], object.currentHitPoints);
   writer.writeObjectList<DiceSet>(
-    offsets[9],
+    offsets[10],
     allOffsets,
     DiceSetSchema.serialize,
     object.diceBag,
   );
-  writer.writeLong(offsets[10], object.experiencePoints);
+  writer.writeLong(offsets[11], object.experiencePoints);
   writer.writeObjectList<ExpertiseItem>(
-    offsets[11],
+    offsets[12],
     allOffsets,
     ExpertiseItemSchema.serialize,
     object.expertise,
   );
-  writer.writeStringList(offsets[12], object.favoriteSpells);
-  writer.writeLong(offsets[13], object.initiative);
-  writer.writeLong(offsets[14], object.level);
-  writer.writeLong(offsets[15], object.maxHitPoints);
-  writer.writeString(offsets[16], object.name);
-  writer.writeString(offsets[17], object.race);
-  writer.writeStringList(offsets[18], object.skills);
-  writer.writeLong(offsets[19], object.speed);
-  writer.writeLong(offsets[20], object.temporaryHitPoints);
+  writer.writeStringList(offsets[13], object.favoriteSpells);
+  writer.writeLong(offsets[14], object.initiative);
+  writer.writeLong(offsets[15], object.level);
+  writer.writeLong(offsets[16], object.maxHitPoints);
+  writer.writeString(offsets[17], object.name);
+  writer.writeString(offsets[18], object.race);
+  writer.writeStringList(offsets[19], object.skills);
+  writer.writeLong(offsets[20], object.speed);
+  writer.writeLong(offsets[21], object.temporaryHitPoints);
 }
 
 Character _characterDeserialize(
@@ -279,31 +300,38 @@ Character _characterDeserialize(
         const [],
     characterClass: reader.readString(offsets[6]),
     coin: reader.readLongList(offsets[7]) ?? const [0, 0, 0],
-    currentHitPoints: reader.readLong(offsets[8]),
+    consumables: reader.readObjectList<Consumable>(
+          offsets[8],
+          ConsumableSchema.deserialize,
+          allOffsets,
+          Consumable(),
+        ) ??
+        const [],
+    currentHitPoints: reader.readLong(offsets[9]),
     diceBag: reader.readObjectList<DiceSet>(
-          offsets[9],
+          offsets[10],
           DiceSetSchema.deserialize,
           allOffsets,
           DiceSet(),
         ) ??
         const [],
-    experiencePoints: reader.readLongOrNull(offsets[10]) ?? 0,
+    experiencePoints: reader.readLongOrNull(offsets[11]) ?? 0,
     expertise: reader.readObjectList<ExpertiseItem>(
-          offsets[11],
+          offsets[12],
           ExpertiseItemSchema.deserialize,
           allOffsets,
           ExpertiseItem(),
         ) ??
         const [],
-    favoriteSpells: reader.readStringList(offsets[12]) ?? const [],
-    initiative: reader.readLong(offsets[13]),
-    level: reader.readLongOrNull(offsets[14]) ?? 1,
-    maxHitPoints: reader.readLong(offsets[15]),
-    name: reader.readString(offsets[16]),
-    race: reader.readString(offsets[17]),
-    skills: reader.readStringList(offsets[18]) ?? const [],
-    speed: reader.readLong(offsets[19]),
-    temporaryHitPoints: reader.readLongOrNull(offsets[20]) ?? 0,
+    favoriteSpells: reader.readStringList(offsets[13]) ?? const [],
+    initiative: reader.readLong(offsets[14]),
+    level: reader.readLongOrNull(offsets[15]) ?? 1,
+    maxHitPoints: reader.readLong(offsets[16]),
+    name: reader.readString(offsets[17]),
+    race: reader.readString(offsets[18]),
+    skills: reader.readStringList(offsets[19]) ?? const [],
+    speed: reader.readLong(offsets[20]),
+    temporaryHitPoints: reader.readLongOrNull(offsets[21]) ?? 0,
   );
   object.id = id;
   return object;
@@ -339,8 +367,16 @@ P _characterDeserializeProp<P>(
     case 7:
       return (reader.readLongList(offset) ?? const [0, 0, 0]) as P;
     case 8:
-      return (reader.readLong(offset)) as P;
+      return (reader.readObjectList<Consumable>(
+            offset,
+            ConsumableSchema.deserialize,
+            allOffsets,
+            Consumable(),
+          ) ??
+          const []) as P;
     case 9:
+      return (reader.readLong(offset)) as P;
+    case 10:
       return (reader.readObjectList<DiceSet>(
             offset,
             DiceSetSchema.deserialize,
@@ -348,9 +384,9 @@ P _characterDeserializeProp<P>(
             DiceSet(),
           ) ??
           const []) as P;
-    case 10:
-      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 11:
+      return (reader.readLongOrNull(offset) ?? 0) as P;
+    case 12:
       return (reader.readObjectList<ExpertiseItem>(
             offset,
             ExpertiseItemSchema.deserialize,
@@ -358,23 +394,23 @@ P _characterDeserializeProp<P>(
             ExpertiseItem(),
           ) ??
           const []) as P;
-    case 12:
-      return (reader.readStringList(offset) ?? const []) as P;
     case 13:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringList(offset) ?? const []) as P;
     case 14:
-      return (reader.readLongOrNull(offset) ?? 1) as P;
-    case 15:
       return (reader.readLong(offset)) as P;
+    case 15:
+      return (reader.readLongOrNull(offset) ?? 1) as P;
     case 16:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 17:
       return (reader.readString(offset)) as P;
     case 18:
-      return (reader.readStringList(offset) ?? const []) as P;
+      return (reader.readString(offset)) as P;
     case 19:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringList(offset) ?? const []) as P;
     case 20:
+      return (reader.readLong(offset)) as P;
+    case 21:
       return (reader.readLongOrNull(offset) ?? 0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1523,6 +1559,95 @@ extension CharacterQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'coin',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      consumablesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'consumables',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      consumablesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'consumables',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      consumablesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'consumables',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      consumablesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'consumables',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      consumablesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'consumables',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition>
+      consumablesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'consumables',
         lower,
         includeLower,
         upper,
@@ -2861,6 +2986,13 @@ extension CharacterQueryObject
     });
   }
 
+  QueryBuilder<Character, Character, QAfterFilterCondition> consumablesElement(
+      FilterQuery<Consumable> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'consumables');
+    });
+  }
+
   QueryBuilder<Character, Character, QAfterFilterCondition> diceBagElement(
       FilterQuery<DiceSet> q) {
     return QueryBuilder.apply(this, (query) {
@@ -3409,6 +3541,13 @@ extension CharacterQueryProperty
   QueryBuilder<Character, List<int>, QQueryOperations> coinProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'coin');
+    });
+  }
+
+  QueryBuilder<Character, List<Consumable>, QQueryOperations>
+      consumablesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'consumables');
     });
   }
 

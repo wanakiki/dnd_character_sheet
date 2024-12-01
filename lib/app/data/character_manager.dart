@@ -6,6 +6,7 @@ import 'items.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'expertise_item.dart';
+import 'consumable.dart';
 
 class CharacterManager extends ChangeNotifier {
   late Character _character;
@@ -272,5 +273,44 @@ class CharacterManager extends ChangeNotifier {
       await isar.characters.put(character);
     });
     notifyListeners();
+  }
+
+  void addConsumable(Consumable consumable) {
+    _character.consumables.add(consumable);
+    notifyListeners();
+    _saveCharacter();
+  }
+
+  void updateConsumable(Consumable consumable) {
+    // Find and update the consumable
+    final index =
+        _character.consumables.indexWhere((c) => c.name == consumable.name);
+    if (index != -1) {
+      _character.consumables[index] = consumable;
+      notifyListeners();
+      _saveCharacter();
+    }
+  }
+
+  void removeConsumable(String name) {
+    _character.consumables.removeWhere((c) => c.name == name);
+    notifyListeners();
+    _saveCharacter();
+  }
+
+  void triggerShortRest() {
+    for (var consumable in _character.consumables) {
+      consumable.recoverShortRest();
+    }
+    notifyListeners();
+    _saveCharacter();
+  }
+
+  void triggerLongRest() {
+    for (var consumable in _character.consumables) {
+      consumable.recoverLongRest();
+    }
+    notifyListeners();
+    _saveCharacter();
   }
 }

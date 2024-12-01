@@ -6,6 +6,7 @@ import 'package:isar/isar.dart';
 import 'items.dart';
 import 'expertise_item.dart';
 import 'spell.dart';
+import 'consumable.dart';
 
 part 'character.g.dart';
 
@@ -35,7 +36,7 @@ class Character {
   List<String> skills; // 新增技能属性
   List<ExpertiseItem> expertise; // 新增专长属性
   List<String> favoriteSpells = []; // New property to store favorite spells
-
+  List<Consumable> consumables = []; // New property to store consumables
   Character({
     required this.name,
     required this.race,
@@ -51,19 +52,21 @@ class Character {
     required this.armorClass,
     required this.initiative,
     required this.speed,
-    List<int>? coin,
+    List<int> coin = const [0, 0, 0],
     this.avatarUrl = '',
-    List<DiceSet>? diceBag,
-    List<Item>? backpack,
-    List<String>? skills,
-    List<ExpertiseItem>? expertise,
-    List<String>? favoriteSpells,
-  })  : coin = coin?.toList() ?? [0, 0, 0],
-        diceBag = diceBag?.toList() ?? [],
-        backpack = backpack?.toList() ?? [],
-        skills = skills?.toList() ?? [],
-        expertise = expertise?.toList() ?? [],
-        favoriteSpells = favoriteSpells?.toList() ?? [];
+    List<DiceSet> diceBag = const [],
+    List<Item> backpack = const [],
+    List<String> skills = const [],
+    List<ExpertiseItem> expertise = const [],
+    List<String> favoriteSpells = const [],
+    List<Consumable> consumables = const [],
+  })  : coin = coin.toList(),
+        diceBag = diceBag.toList(),
+        backpack = backpack.toList(),
+        skills = skills.toList(),
+        expertise = expertise.toList(),
+        favoriteSpells = favoriteSpells.toList(),
+        consumables = consumables.toList();
 
   factory Character.fromJson(Map<String, dynamic> json) {
     return Character(
@@ -97,6 +100,10 @@ class Character {
               .toList() ??
           [], // 从JSON中获取专长
       favoriteSpells: List<String>.from(json['favoriteSpells'] ?? []),
+      consumables: (json['consumables'] as List<dynamic>?)
+              ?.map((e) => Consumable.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [], // 从JSON中获取消耗品
     );
   }
 
@@ -125,6 +132,8 @@ class Character {
           .map((expertiseItem) => expertiseItem.toJson())
           .toList(), // 将专长转换为JSON
       'favoriteSpells': favoriteSpells,
+      'consumables':
+          consumables.map((consumable) => consumable.toJson()).toList(),
     };
   }
 
@@ -144,7 +153,8 @@ class Character {
         'Dice Bag: ${diceBag.map((diceSet) => diceSet.toString()).join(', ')}\n'
         'Backpack: ${backpack.map((item) => item.toString()).join(', ')}\n'
         'Skills: ${skills.join(', ')}\n' // 添加技能到字符串表示
-        'Expertise: ${expertise.map((expertiseItem) => expertiseItem.toString()).join(', ')}'; // 添加专长到字符串表示
+        'Expertise: ${expertise.map((expertiseItem) => expertiseItem.toString()).join(', ')}\n' // 添加专长到字符串表示
+        'Consumables: ${consumables.map((consumable) => consumable.toString()).join(', ')}'; // 添加消耗品到字符串表示
   }
 
   // Factory constructor to create a default empty character
@@ -175,6 +185,7 @@ class Character {
       skills: ['体质 - 豁免'],
       expertise: [ExpertiseItem(name: '一种乐器', description: '长笛')], // 初始化专长
       favoriteSpells: [], // Initialize with an empty list
+      consumables: [], // Initialize with an empty list
     );
   }
 
@@ -201,6 +212,7 @@ class Character {
     List<String>? skills,
     List<ExpertiseItem>? expertise,
     List<String>? favoriteSpells,
+    List<Consumable>? consumables,
   }) {
     return Character(
       name: name ?? this.name,
@@ -225,6 +237,7 @@ class Character {
       skills: skills ?? this.skills, // 添加技能到copyWith方法
       expertise: expertise ?? this.expertise, // 添加专长到copyWith方法
       favoriteSpells: favoriteSpells ?? this.favoriteSpells,
+      consumables: consumables ?? this.consumables,
     );
   }
 }
