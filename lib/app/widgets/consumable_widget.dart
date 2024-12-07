@@ -214,12 +214,6 @@ class ConsumableWidget extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('取消'),
-            ),
-            TextButton(
-              onPressed: () {
                 if (name.isNotEmpty) {
                   consumable.name = name;
                   consumable.maxCount = maxCount;
@@ -230,6 +224,16 @@ class ConsumableWidget extends StatelessWidget {
                 }
               },
               child: Text('保存'),
+            ),
+            GestureDetector(
+              onDoubleTap: () {
+                manager.deleteConsumable(consumable);
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                '删除(双击)',
+                style: TextStyle(color: Colors.red),
+              ),
             ),
           ],
         );

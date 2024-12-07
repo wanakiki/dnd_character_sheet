@@ -292,6 +292,14 @@ class CharacterManager extends ChangeNotifier {
     }
   }
 
+  void deleteConsumable(Consumable consumable) {
+    if (_character.consumables.contains(consumable)) {
+      _character.consumables.remove(consumable);
+      notifyListeners();
+      _saveCharacter();
+    }
+  }
+
   void removeConsumable(String name) {
     _character.consumables.removeWhere((c) => c.name == name);
     notifyListeners();
