@@ -179,7 +179,13 @@ class _BackpackPageState extends State<BackpackPage> {
         actions: [
           IconButton(
             icon: Icon(_isEditMode ? Icons.check : Icons.edit),
-            onPressed: _toggleEditMode,
+            onPressed: () {
+              if (_isEditMode) {
+                // 保存排序后的列表到数据库
+                _saveSortedItems(context);
+              }
+              _toggleEditMode();
+            },
             tooltip: _isEditMode ? 'Finish Editing' : 'Edit',
           ),
           IconButton(
@@ -195,11 +201,19 @@ class _BackpackPageState extends State<BackpackPage> {
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ListView.builder(
+            child: ReorderableListView.builder(
               itemCount: backpack.length,
+              onReorder: (oldIndex, newIndex) {
+                if (newIndex > oldIndex) newIndex--;
+                final item = backpack.removeAt(oldIndex);
+                backpack.insert(newIndex, item);
+                // 更新数据库中的顺序
+                _saveSortedItems(context);
+              },
               itemBuilder: (context, index) {
                 final item = backpack[index];
                 return Card(
+                  key: ValueKey(item.uniqueId), // 确保每个卡片有唯一的key
                   margin: EdgeInsets.symmetric(vertical: 4.0),
                   child: ListTile(
                     title: Text(item.name),
@@ -231,8 +245,8 @@ class _BackpackPageState extends State<BackpackPage> {
                               )
                             : Text('数量: ${item.quantity}'),
                     onLongPress: _isEditMode
-                        ? () => _editItemDetails(context, item)
-                        : null,
+                        ? null
+                        : () => _editItemDetails(context, item), // 禁用长按编辑
                   ),
                 );
               },
@@ -246,5 +260,11 @@ class _BackpackPageState extends State<BackpackPage> {
         tooltip: '添加新物品',
       ),
     );
+  }
+
+  // 新增方法：保存排序后的列表到数据库
+  void _saveSortedItems(BuildContext context) {
+    final manager = Provider.of<CharacterManager>(context, listen: false);
+    manager.updateBackpackOrder(manager.character.backpack);
   }
 }

@@ -313,4 +313,10 @@ class CharacterManager extends ChangeNotifier {
     notifyListeners();
     _saveCharacter();
   }
+
+  void updateBackpackOrder(List<Item> newOrder) {
+    _character.backpack = newOrder;
+    notifyListeners();
+    _saveCharacter();
+  }
 }
