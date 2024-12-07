@@ -73,7 +73,11 @@ class _CharacterDisplayScreenState extends State<CharacterDisplayScreen> {
 
       try {
         // Create the file path
-        final filePath = '$outputPath/character_export.json';
+        final now = DateTime.now();
+        final timestamp =
+            '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}'; // Generate a human-readable timestamp
+        final filePath =
+            '$outputPath/dndc_$timestamp.json'; // Update file path to include timestamp
         final file = File(filePath);
 
         await file.writeAsString(jsonString);
