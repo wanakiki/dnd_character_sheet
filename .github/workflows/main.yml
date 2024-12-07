@@ -1,0 +1,36 @@
+name: Create Pre-release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'latest'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build the app
+        run: flutter build apk --release
+
+      - name: Create Pre-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 获取当前日期和时间作为版本号
+          VERSION=$(date +'%Y%m%d%H%M%S')
+          # 创建预发布版本，并添加警告信息
+          gh release create "${VERSION}-pre" build/app/outputs/flutter-apk/app-release.apk \
+            --title "Pre-release ${VERSION}" \
+            --notes "This is a pre-release version. Please note that this version is experimental and may be unstable. Make sure to back up your data before using it."
