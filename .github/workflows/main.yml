@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write  # Allow writing to the repository contents
+  actions: read    # Allow reading actions
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,9 +35,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 获取当前日期和时间作为版本号
-          VERSION=$(date +'%Y%m%d%H%M%S')
-          # 创建预发布版本，并添加警告信息
-          gh release create "${VERSION}-pre" build/app/outputs/flutter-apk/app-release.apk \
-            --title "Pre-release ${VERSION}" \
-            --notes "This is a pre-release version. Please note that this version is experimental and may be unstable. Make sure to back up your data before using it."
+          # Get the current date and time as a formatted version number
+          VERSION=$(date +'%Y-%m-%d-%H-%M-%S')
+          # Create a more user-friendly version name
+          PRE_RELEASE_NAME="pre-release-${VERSION}"
+          # Create the pre-release version and add warning information
+          gh release create "${PRE_RELEASE_NAME}" build/app/outputs/flutter-apk/app-release.apk \
+            --title "${PRE_RELEASE_NAME}" \
+            --notes "This is a pre-release version. Please note that this version is experimental and may be unstable. Make sure to back up your data before using it." \
+            --prerelease  # Specify that this is a pre-release
