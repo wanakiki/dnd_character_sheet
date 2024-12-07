@@ -41,7 +41,7 @@ tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
 
-ext.kotlin_version = '1.9.0'
+ext.kotlin_version = '<latest-version>'
 
 buildscript {
     repositories {
@@ -49,7 +49,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.android.tools.build:gradle:8.1.0' // or the latest version that supports API 34
+        // Add other classpath dependencies here if needed
     }
 }
