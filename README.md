@@ -11,4 +11,4 @@ A Dungeons & Dragons character sheet app built with Flutter. Designed to replace
 - [x] Proficiency and corresponding advantage/disadvantage checks
 - [ ] Campaign notes
 - [x] Spellbook
-- [ ] Quick consumables bar
+- [x] Quick consumables bar

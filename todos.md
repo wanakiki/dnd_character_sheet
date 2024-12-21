@@ -17,3 +17,7 @@ https://juejin.cn/post/7220688635142455356
 
 骰子图标
 https://pixabay.com/zh/vectors/d20-dice-game-nat20-dnd-d-d-7136921/
+
+
+open ios/Runner.xcworkspace
+flutter build ios --release
