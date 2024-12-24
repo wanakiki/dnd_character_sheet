@@ -9,38 +9,40 @@ import 'expertise_item.dart';
 import 'consumable.dart';
 
 class CharacterManager extends ChangeNotifier {
-  late Character _character;
+  // Initialize with empty character
+  Character _character = Character.empty();
   final Isar isar;
   final AppPreferences appPrefs;
 
   CharacterManager({required this.isar, required this.appPrefs}) {
-    _character = Character.empty();
-    _loadCharacter();
+    _loadCharacter().then((character) {
+      _character = character;
+      notifyListeners();
+    });
   }
 
-  // Future<void> _loadCharacter() async {
-  //   final character = await isar.characters.get(1);
-  //   if (character != null) {
-  //     _character = character;
-  //   } else {
-  //     _saveCharacter();
-  //   }
-  //   notifyListeners();
-  // }
+  Future<Character> _loadCharacter() async {
+    final characterCount = await isar.characters.count();
+    if (characterCount == 0) {
+      _character = Character.empty();
+      await _saveCharacter();
+      await appPrefs.saveLastCharacterId(_character.id);
+      return _character;
+    }
 
-  Future<void> _loadCharacter() async {
     final lastCharacterId = appPrefs.getLastCharacterId();
     if (lastCharacterId != null) {
-      final character = await await isar.characters.get(lastCharacterId);
+      final character = await isar.characters.get(lastCharacterId);
       if (character != null) {
-        _character = character;
-      } else {
-        _saveCharacter();
+        return character;
       }
-    } else {
-      _saveCharacter();
     }
-    notifyListeners();
+
+    // Default case - create new character
+    _character = Character.empty();
+    await _saveCharacter();
+    await appPrefs.saveLastCharacterId(_character.id);
+    return _character;
   }
 
   // 更新角色
