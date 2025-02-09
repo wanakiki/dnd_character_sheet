@@ -14,6 +14,7 @@ import 'app/pages/setting_page.dart';
 import 'app/pages/about_page.dart';
 import 'app/setting/app_pref.dart';
 import 'app/pages/widget_test_page.dart';
+import 'package:dnd_character/app/pages/initiative_order_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,10 +68,11 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/': (context) => CharacterDisplayScreen(),
-        // '/': (context) => WidgetTestPage(),
+        // '/': (context) => MonsterPreviewScreen(),
         '/switch_character': (context) => SwitchCharacterScreen(),
         '/setting': (context) => SettingsPage(),
         '/about': (context) => AboutPage(),
+        '/initiative': (context) => InitiativeOrderPage(),
       },
     );
   }
