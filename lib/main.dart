@@ -1,3 +1,4 @@
+import 'package:dnd_character/app/pages/monster_page.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        '/': (context) => CharacterDisplayScreen(),
+        '/': (context) => MonsterPage(),
         // '/': (context) => WidgetTestPage(),
         '/switch_character': (context) => SwitchCharacterScreen(),
         '/setting': (context) => SettingsPage(),
