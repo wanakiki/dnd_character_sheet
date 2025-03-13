@@ -201,55 +201,66 @@ class _BackpackPageState extends State<BackpackPage> {
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ReorderableListView.builder(
-              itemCount: backpack.length,
-              onReorder: (oldIndex, newIndex) {
-                if (newIndex > oldIndex) newIndex--;
-                final item = backpack.removeAt(oldIndex);
-                backpack.insert(newIndex, item);
-                // 更新数据库中的顺序
-                _saveSortedItems(context);
-              },
-              itemBuilder: (context, index) {
-                final item = backpack[index];
-                return Card(
-                  key: ValueKey(item.uniqueId), // 确保每个卡片有唯一的key
-                  margin: EdgeInsets.symmetric(vertical: 4.0),
-                  child: ListTile(
-                    title: Text(item.name),
-                    subtitle: Text(item.description),
-                    trailing: _isEditMode
-                        ? Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.remove, color: Colors.red),
-                                onPressed: () =>
-                                    _decrementItemQuantity(context, item),
-                                tooltip: 'Decrease Quantity',
-                              ),
-                              Text('数量: ${item.quantity}'),
-                              IconButton(
-                                icon: Icon(Icons.add, color: Colors.green),
-                                onPressed: () =>
-                                    _incrementItemQuantity(context, item),
-                                tooltip: 'Increase Quantity',
-                              ),
-                            ],
-                          )
-                        : _isDeleteMode
-                            ? IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
-                                onPressed: () => _deleteItem(context, item),
-                                tooltip: 'Delete Item',
-                              )
-                            : Text('数量: ${item.quantity}'),
-                    onLongPress: _isEditMode
-                        ? null
-                        : () => _editItemDetails(context, item), // 禁用长按编辑
+            child: Column(
+              children: [
+                Expanded(
+                  child: ReorderableListView.builder(
+                    itemCount: backpack.length,
+                    onReorder: (oldIndex, newIndex) {
+                      if (newIndex > oldIndex) newIndex--;
+                      final item = backpack.removeAt(oldIndex);
+                      backpack.insert(newIndex, item);
+                      // 更新数据库中的顺序
+                      _saveSortedItems(context);
+                    },
+                    padding: EdgeInsets.only(bottom: 80), // 为底部浮动按钮留出空间
+                    itemBuilder: (context, index) {
+                      final item = backpack[index];
+                      return Card(
+                        key: ValueKey(item.uniqueId), // 确保每个卡片有唯一的key
+                        margin: EdgeInsets.symmetric(vertical: 4.0),
+                        child: ListTile(
+                          title: Text(item.name),
+                          subtitle: Text(item.description),
+                          trailing: _isEditMode
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon:
+                                          Icon(Icons.remove, color: Colors.red),
+                                      onPressed: () =>
+                                          _decrementItemQuantity(context, item),
+                                      tooltip: 'Decrease Quantity',
+                                    ),
+                                    Text('数量: ${item.quantity}'),
+                                    IconButton(
+                                      icon:
+                                          Icon(Icons.add, color: Colors.green),
+                                      onPressed: () =>
+                                          _incrementItemQuantity(context, item),
+                                      tooltip: 'Increase Quantity',
+                                    ),
+                                  ],
+                                )
+                              : _isDeleteMode
+                                  ? IconButton(
+                                      icon:
+                                          Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () =>
+                                          _deleteItem(context, item),
+                                      tooltip: 'Delete Item',
+                                    )
+                                  : Text('数量: ${item.quantity}'),
+                          onLongPress: _isEditMode
+                              ? null
+                              : () => _editItemDetails(context, item), // 禁用长按编辑
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
           );
         },

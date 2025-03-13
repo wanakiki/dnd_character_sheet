@@ -42,6 +42,16 @@ class AppDrawerWidget extends StatelessWidget {
               },
             ),
             ListTile(
+              leading:
+                  Icon(Icons.format_list_numbered_rtl, color: Colors.white),
+              title: Text('先攻', style: TextStyle(color: Colors.white)),
+              onTap: () {
+                // Navigate to settings
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, '/initiative');
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.info, color: Colors.white),
               title: Text('关于', style: TextStyle(color: Colors.white)),
               onTap: () {
