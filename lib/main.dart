@@ -68,8 +68,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        '/': (context) => CharacterDisplayScreen(),
-        // '/': (context) => WidgetTestPage(),
+        // '/': (context) => CharacterDisplayScreen(),
+        '/': (context) => WidgetTestPage(),
         '/switch_character': (context) => SwitchCharacterScreen(),
         '/setting': (context) => SettingsPage(),
         '/about': (context) => AboutPage(),

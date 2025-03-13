@@ -99,19 +99,20 @@ class MonsterPreviewScreen extends StatelessWidget {
 class WidgetTestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Widget测试'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ConsumableWidget(),
-          ],
-        ),
-      ),
-    );
+    return MonsterPreviewScreen();
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: const Text('Widget测试'),
+    //   ),
+    //   body: Padding(
+    //     padding: const EdgeInsets.all(16.0),
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: [
+    //         MonsterPreviewScreen(),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }
