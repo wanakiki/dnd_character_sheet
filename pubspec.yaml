@@ -49,6 +49,7 @@ dependencies:
   permission_handler: ^11.3.1
   file_picker: ^8.0.7
   url_launcher: ^6.0.20
+  flutter_markdown: ^0.7.7+1
 
   
 
@@ -82,6 +83,7 @@ flutter:
     - assets/character.jpg
     - assets/d20.png
     - assets/spells.json
+    - assets/render_md/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
