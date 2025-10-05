@@ -24,6 +24,15 @@ class AppDrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
+              leading: Icon(Icons.add, color: Colors.white),
+              title: Text('创建新角色', style: TextStyle(color: Colors.white)),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, '/create_character');
+              },
+            ),
+            Divider(color: Colors.white54),
+            ListTile(
               leading: Icon(Icons.switch_account, color: Colors.white),
               title: Text('切换角色', style: TextStyle(color: Colors.white)),
               onTap: () {

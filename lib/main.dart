@@ -15,6 +15,7 @@ import 'app/pages/about_page.dart';
 import 'app/setting/app_pref.dart';
 import 'app/pages/widget_test_page.dart';
 import 'package:dnd_character/app/pages/initiative_order_page.dart';
+import 'app/pages/character_creation_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
         '/setting': (context) => SettingsPage(),
         '/about': (context) => AboutPage(),
         '/initiative': (context) => InitiativeOrderPage(),
+        '/create_character': (context) => CharacterCreationPage(),
       },
     );
   }
