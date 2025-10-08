@@ -36,9 +36,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Get the current date and time as a formatted version number
-          VERSION=$(date +'%Y-%m-%d-%H-%M-%S')
+          VERSION=$(date +'%Y%m%d-%H:%M')
           # Create a more user-friendly version name
-          PRE_RELEASE_NAME="pre-release-${VERSION}"
+          PRE_RELEASE_NAME="Pre-release-${VERSION}"
           # Create the pre-release version and add warning information
           gh release create "${PRE_RELEASE_NAME}" build/app/outputs/flutter-apk/app-release.apk \
             --title "${PRE_RELEASE_NAME}" \

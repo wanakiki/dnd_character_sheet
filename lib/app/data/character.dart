@@ -16,6 +16,7 @@ class Character {
 
   @Index(unique: true, replace: true)
   String name;
+  int age;
   String race;
   String characterClass;
   String background;
@@ -39,6 +40,7 @@ class Character {
   List<Consumable> consumables = []; // New property to store consumables
   Character({
     required this.name,
+    required this.age,
     required this.race,
     required this.characterClass,
     required this.background,
@@ -71,6 +73,7 @@ class Character {
   factory Character.fromJson(Map<String, dynamic> json) {
     return Character(
       name: json['name'],
+      age: json['age'],
       race: json['race'],
       characterClass: json['characterClass'],
       background: json['background'],
@@ -110,6 +113,7 @@ class Character {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
+      'age': age,
       'race': race,
       'characterClass': characterClass,
       'background': background,
@@ -140,6 +144,7 @@ class Character {
   @override
   String toString() {
     return 'Name: $name\n'
+        'Age: $age\n'
         'Race: $race\n'
         'Class: $characterClass\n'
         'Background: $background\n'
@@ -161,6 +166,7 @@ class Character {
   factory Character.empty() {
     return Character(
       name: 'Unnamed Hero',
+      age: 20,
       race: '人类',
       characterClass: '战士',
       background: '士兵',
@@ -192,6 +198,7 @@ class Character {
   // CopyWith method to create a new character with updated values
   Character copyWith({
     String? name,
+    int? age,
     String? race,
     String? characterClass,
     String? background,
@@ -216,6 +223,7 @@ class Character {
   }) {
     return Character(
       name: name ?? this.name,
+      age: age ?? this.age,
       race: race ?? this.race,
       characterClass: characterClass ?? this.characterClass,
       background: background ?? this.background,

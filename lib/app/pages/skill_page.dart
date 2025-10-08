@@ -60,10 +60,11 @@ class _SkillExpertiseScreenState extends State<SkillExpertiseScreen> {
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: ListView(
+                padding: EdgeInsets.only(bottom: 80), // 为底部浮动按钮留出空间
                 children: [
                   Theme(
                     data: Theme.of(context).copyWith(
-                      dividerColor: Colors.transparent, // 去除分隔线颜色
+                      dividerColor: Colors.transparent,
                     ),
                     child: ExpansionTile(
                       title: Text(
