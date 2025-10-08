@@ -83,7 +83,8 @@ flutter:
     - assets/character.jpg
     - assets/d20.png
     - assets/spells.json
-    - assets/render_md/
+    - assets/render_md/race/
+    - assets/render_md/class/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

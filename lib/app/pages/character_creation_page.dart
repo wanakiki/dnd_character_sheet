@@ -1,3 +1,4 @@
+import 'creation_steps/class_selection_step.dart';
 import 'package:flutter/material.dart';
 import 'creation_steps/race_selection_step.dart';
 
@@ -10,6 +11,8 @@ class CharacterCreationPage extends StatefulWidget {
 
 class _CharacterCreationPageState extends State<CharacterCreationPage> {
   int _currentStep = 0;
+  String? _selectedRace;
+  String? _selectedClass;
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +43,22 @@ class _CharacterCreationPageState extends State<CharacterCreationPage> {
             title: const Text('种族'),
             content: RaceSelectionStep(
               onRaceSelected: (race) {
-                // TODO: Handle race selection
+                setState(() {
+                  _selectedRace = race;
+                });
               },
             ),
             isActive: _currentStep >= 0,
           ),
           Step(
             title: const Text('职业'),
-            content: Container(), // Placeholder for ClassSelectionStep
+            content: ClassSelectionStep(
+              onClassSelected: (className) {
+                setState(() {
+                  _selectedClass = className;
+                });
+              },
+            ),
             isActive: _currentStep >= 1,
           ),
           // More steps will be added here

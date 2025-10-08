@@ -29,7 +29,7 @@ class _RaceSelectionStepState extends State<RaceSelectionStep> {
 
     final Map<String, String> raceAssets = {};
     for (final key in manifestMap.keys) {
-      if (key.startsWith('assets/render_md/') && key.endsWith('.md')) {
+      if (key.startsWith('assets/render_md/race/') && key.endsWith('.md')) {
         String fileName = key.split('/').last;
         String raceName = fileName.substring(0, fileName.length - 3);
         if (raceName != '种族') {
