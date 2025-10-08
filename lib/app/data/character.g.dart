@@ -17,117 +17,122 @@ const CharacterSchema = CollectionSchema(
   name: r'Character',
   id: 4658184409279959047,
   properties: {
-    r'alignment': PropertySchema(
+    r'age': PropertySchema(
       id: 0,
+      name: r'age',
+      type: IsarType.long,
+    ),
+    r'alignment': PropertySchema(
+      id: 1,
       name: r'alignment',
       type: IsarType.string,
     ),
     r'armorClass': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'armorClass',
       type: IsarType.long,
     ),
     r'attributes': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'attributes',
       type: IsarType.longList,
     ),
     r'avatarUrl': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'avatarUrl',
       type: IsarType.string,
     ),
     r'background': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'background',
       type: IsarType.string,
     ),
     r'backpack': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'backpack',
       type: IsarType.objectList,
       target: r'Item',
     ),
     r'characterClass': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'characterClass',
       type: IsarType.string,
     ),
     r'coin': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'coin',
       type: IsarType.longList,
     ),
     r'consumables': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'consumables',
       type: IsarType.objectList,
       target: r'Consumable',
     ),
     r'currentHitPoints': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'currentHitPoints',
       type: IsarType.long,
     ),
     r'diceBag': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'diceBag',
       type: IsarType.objectList,
       target: r'DiceSet',
     ),
     r'experiencePoints': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'experiencePoints',
       type: IsarType.long,
     ),
     r'expertise': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'expertise',
       type: IsarType.objectList,
       target: r'ExpertiseItem',
     ),
     r'favoriteSpells': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'favoriteSpells',
       type: IsarType.stringList,
     ),
     r'initiative': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'initiative',
       type: IsarType.long,
     ),
     r'level': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'level',
       type: IsarType.long,
     ),
     r'maxHitPoints': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'maxHitPoints',
       type: IsarType.long,
     ),
     r'name': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'name',
       type: IsarType.string,
     ),
     r'race': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'race',
       type: IsarType.string,
     ),
     r'skills': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'skills',
       type: IsarType.stringList,
     ),
     r'speed': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'speed',
       type: IsarType.long,
     ),
     r'temporaryHitPoints': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'temporaryHitPoints',
       type: IsarType.long,
     )
@@ -235,48 +240,49 @@ void _characterSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.alignment);
-  writer.writeLong(offsets[1], object.armorClass);
-  writer.writeLongList(offsets[2], object.attributes);
-  writer.writeString(offsets[3], object.avatarUrl);
-  writer.writeString(offsets[4], object.background);
+  writer.writeLong(offsets[0], object.age);
+  writer.writeString(offsets[1], object.alignment);
+  writer.writeLong(offsets[2], object.armorClass);
+  writer.writeLongList(offsets[3], object.attributes);
+  writer.writeString(offsets[4], object.avatarUrl);
+  writer.writeString(offsets[5], object.background);
   writer.writeObjectList<Item>(
-    offsets[5],
+    offsets[6],
     allOffsets,
     ItemSchema.serialize,
     object.backpack,
   );
-  writer.writeString(offsets[6], object.characterClass);
-  writer.writeLongList(offsets[7], object.coin);
+  writer.writeString(offsets[7], object.characterClass);
+  writer.writeLongList(offsets[8], object.coin);
   writer.writeObjectList<Consumable>(
-    offsets[8],
+    offsets[9],
     allOffsets,
     ConsumableSchema.serialize,
     object.consumables,
   );
-  writer.writeLong(offsets[9], object.currentHitPoints);
+  writer.writeLong(offsets[10], object.currentHitPoints);
   writer.writeObjectList<DiceSet>(
-    offsets[10],
+    offsets[11],
     allOffsets,
     DiceSetSchema.serialize,
     object.diceBag,
   );
-  writer.writeLong(offsets[11], object.experiencePoints);
+  writer.writeLong(offsets[12], object.experiencePoints);
   writer.writeObjectList<ExpertiseItem>(
-    offsets[12],
+    offsets[13],
     allOffsets,
     ExpertiseItemSchema.serialize,
     object.expertise,
   );
-  writer.writeStringList(offsets[13], object.favoriteSpells);
-  writer.writeLong(offsets[14], object.initiative);
-  writer.writeLong(offsets[15], object.level);
-  writer.writeLong(offsets[16], object.maxHitPoints);
-  writer.writeString(offsets[17], object.name);
-  writer.writeString(offsets[18], object.race);
-  writer.writeStringList(offsets[19], object.skills);
-  writer.writeLong(offsets[20], object.speed);
-  writer.writeLong(offsets[21], object.temporaryHitPoints);
+  writer.writeStringList(offsets[14], object.favoriteSpells);
+  writer.writeLong(offsets[15], object.initiative);
+  writer.writeLong(offsets[16], object.level);
+  writer.writeLong(offsets[17], object.maxHitPoints);
+  writer.writeString(offsets[18], object.name);
+  writer.writeString(offsets[19], object.race);
+  writer.writeStringList(offsets[20], object.skills);
+  writer.writeLong(offsets[21], object.speed);
+  writer.writeLong(offsets[22], object.temporaryHitPoints);
 }
 
 Character _characterDeserialize(
@@ -286,52 +292,53 @@ Character _characterDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Character(
-    alignment: reader.readString(offsets[0]),
-    armorClass: reader.readLong(offsets[1]),
-    attributes: reader.readLongList(offsets[2]) ?? [],
-    avatarUrl: reader.readStringOrNull(offsets[3]) ?? '',
-    background: reader.readString(offsets[4]),
+    age: reader.readLong(offsets[0]),
+    alignment: reader.readString(offsets[1]),
+    armorClass: reader.readLong(offsets[2]),
+    attributes: reader.readLongList(offsets[3]) ?? [],
+    avatarUrl: reader.readStringOrNull(offsets[4]) ?? '',
+    background: reader.readString(offsets[5]),
     backpack: reader.readObjectList<Item>(
-          offsets[5],
+          offsets[6],
           ItemSchema.deserialize,
           allOffsets,
           Item(),
         ) ??
         const [],
-    characterClass: reader.readString(offsets[6]),
-    coin: reader.readLongList(offsets[7]) ?? const [0, 0, 0],
+    characterClass: reader.readString(offsets[7]),
+    coin: reader.readLongList(offsets[8]) ?? const [0, 0, 0],
     consumables: reader.readObjectList<Consumable>(
-          offsets[8],
+          offsets[9],
           ConsumableSchema.deserialize,
           allOffsets,
           Consumable(),
         ) ??
         const [],
-    currentHitPoints: reader.readLong(offsets[9]),
+    currentHitPoints: reader.readLong(offsets[10]),
     diceBag: reader.readObjectList<DiceSet>(
-          offsets[10],
+          offsets[11],
           DiceSetSchema.deserialize,
           allOffsets,
           DiceSet(),
         ) ??
         const [],
-    experiencePoints: reader.readLongOrNull(offsets[11]) ?? 0,
+    experiencePoints: reader.readLongOrNull(offsets[12]) ?? 0,
     expertise: reader.readObjectList<ExpertiseItem>(
-          offsets[12],
+          offsets[13],
           ExpertiseItemSchema.deserialize,
           allOffsets,
           ExpertiseItem(),
         ) ??
         const [],
-    favoriteSpells: reader.readStringList(offsets[13]) ?? const [],
-    initiative: reader.readLong(offsets[14]),
-    level: reader.readLongOrNull(offsets[15]) ?? 1,
-    maxHitPoints: reader.readLong(offsets[16]),
-    name: reader.readString(offsets[17]),
-    race: reader.readString(offsets[18]),
-    skills: reader.readStringList(offsets[19]) ?? const [],
-    speed: reader.readLong(offsets[20]),
-    temporaryHitPoints: reader.readLongOrNull(offsets[21]) ?? 0,
+    favoriteSpells: reader.readStringList(offsets[14]) ?? const [],
+    initiative: reader.readLong(offsets[15]),
+    level: reader.readLongOrNull(offsets[16]) ?? 1,
+    maxHitPoints: reader.readLong(offsets[17]),
+    name: reader.readString(offsets[18]),
+    race: reader.readString(offsets[19]),
+    skills: reader.readStringList(offsets[20]) ?? const [],
+    speed: reader.readLong(offsets[21]),
+    temporaryHitPoints: reader.readLongOrNull(offsets[22]) ?? 0,
   );
   object.id = id;
   return object;
@@ -345,16 +352,18 @@ P _characterDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
-    case 1:
       return (reader.readLong(offset)) as P;
-    case 2:
-      return (reader.readLongList(offset) ?? []) as P;
-    case 3:
-      return (reader.readStringOrNull(offset) ?? '') as P;
-    case 4:
+    case 1:
       return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readLong(offset)) as P;
+    case 3:
+      return (reader.readLongList(offset) ?? []) as P;
+    case 4:
+      return (reader.readStringOrNull(offset) ?? '') as P;
     case 5:
+      return (reader.readString(offset)) as P;
+    case 6:
       return (reader.readObjectList<Item>(
             offset,
             ItemSchema.deserialize,
@@ -362,11 +371,11 @@ P _characterDeserializeProp<P>(
             Item(),
           ) ??
           const []) as P;
-    case 6:
-      return (reader.readString(offset)) as P;
     case 7:
-      return (reader.readLongList(offset) ?? const [0, 0, 0]) as P;
+      return (reader.readString(offset)) as P;
     case 8:
+      return (reader.readLongList(offset) ?? const [0, 0, 0]) as P;
+    case 9:
       return (reader.readObjectList<Consumable>(
             offset,
             ConsumableSchema.deserialize,
@@ -374,9 +383,9 @@ P _characterDeserializeProp<P>(
             Consumable(),
           ) ??
           const []) as P;
-    case 9:
-      return (reader.readLong(offset)) as P;
     case 10:
+      return (reader.readLong(offset)) as P;
+    case 11:
       return (reader.readObjectList<DiceSet>(
             offset,
             DiceSetSchema.deserialize,
@@ -384,9 +393,9 @@ P _characterDeserializeProp<P>(
             DiceSet(),
           ) ??
           const []) as P;
-    case 11:
-      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 12:
+      return (reader.readLongOrNull(offset) ?? 0) as P;
+    case 13:
       return (reader.readObjectList<ExpertiseItem>(
             offset,
             ExpertiseItemSchema.deserialize,
@@ -394,23 +403,23 @@ P _characterDeserializeProp<P>(
             ExpertiseItem(),
           ) ??
           const []) as P;
-    case 13:
-      return (reader.readStringList(offset) ?? const []) as P;
     case 14:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringList(offset) ?? const []) as P;
     case 15:
-      return (reader.readLongOrNull(offset) ?? 1) as P;
-    case 16:
       return (reader.readLong(offset)) as P;
+    case 16:
+      return (reader.readLongOrNull(offset) ?? 1) as P;
     case 17:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 18:
       return (reader.readString(offset)) as P;
     case 19:
-      return (reader.readStringList(offset) ?? const []) as P;
+      return (reader.readString(offset)) as P;
     case 20:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringList(offset) ?? const []) as P;
     case 21:
+      return (reader.readLong(offset)) as P;
+    case 22:
       return (reader.readLongOrNull(offset) ?? 0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -607,6 +616,59 @@ extension CharacterQueryWhere
 
 extension CharacterQueryFilter
     on QueryBuilder<Character, Character, QFilterCondition> {
+  QueryBuilder<Character, Character, QAfterFilterCondition> ageEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'age',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition> ageGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'age',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition> ageLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'age',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterFilterCondition> ageBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'age',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Character, Character, QAfterFilterCondition> alignmentEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -3012,6 +3074,18 @@ extension CharacterQueryLinks
     on QueryBuilder<Character, Character, QFilterCondition> {}
 
 extension CharacterQuerySortBy on QueryBuilder<Character, Character, QSortBy> {
+  QueryBuilder<Character, Character, QAfterSortBy> sortByAge() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'age', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterSortBy> sortByAgeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'age', Sort.desc);
+    });
+  }
+
   QueryBuilder<Character, Character, QAfterSortBy> sortByAlignment() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'alignment', Sort.asc);
@@ -3186,6 +3260,18 @@ extension CharacterQuerySortBy on QueryBuilder<Character, Character, QSortBy> {
 
 extension CharacterQuerySortThenBy
     on QueryBuilder<Character, Character, QSortThenBy> {
+  QueryBuilder<Character, Character, QAfterSortBy> thenByAge() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'age', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Character, Character, QAfterSortBy> thenByAgeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'age', Sort.desc);
+    });
+  }
+
   QueryBuilder<Character, Character, QAfterSortBy> thenByAlignment() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'alignment', Sort.asc);
@@ -3372,6 +3458,12 @@ extension CharacterQuerySortThenBy
 
 extension CharacterQueryWhereDistinct
     on QueryBuilder<Character, Character, QDistinct> {
+  QueryBuilder<Character, Character, QDistinct> distinctByAge() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'age');
+    });
+  }
+
   QueryBuilder<Character, Character, QDistinct> distinctByAlignment(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -3493,6 +3585,12 @@ extension CharacterQueryProperty
   QueryBuilder<Character, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Character, int, QQueryOperations> ageProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'age');
     });
   }
 
