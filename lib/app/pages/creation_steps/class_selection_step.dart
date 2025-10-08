@@ -26,9 +26,7 @@ class _ClassSelectionStepState extends State<ClassSelectionStep> {
   }
 
   Future<void> _loadClasses() async {
-    print("Starting _loadClasses...");
     final manifestContent = await rootBundle.loadString('AssetManifest.json');
-    // print("AssetManifest.json content: $manifestContent");
     final Map<String, dynamic> manifestMap = json.decode(manifestContent);
 
     final Map<String, List<String>> classHierarchy = {};
@@ -36,23 +34,20 @@ class _ClassSelectionStepState extends State<ClassSelectionStep> {
 
     for (final key in manifestMap.keys) {
       if (key.startsWith('assets/render_md/class/') && key.endsWith('.md')) {
-        print("Processing asset key: $key");
         String fileName = key.split('/').last;
         String fullClassName = fileName.substring(0, fileName.length - 3);
         fullClassNameToPath[fullClassName] = key;
-        print("Found class: $fullClassName at path: $key");
 
         List<String> parts = fullClassName.split('-');
         if (parts.length == 2) {
           String baseClass = parts[0];
           String subClass = parts[1];
-          print("  - Base class: $baseClass, Subclass: $subClass");
           if (!classHierarchy.containsKey(baseClass)) {
             classHierarchy[baseClass] = [];
           }
           classHierarchy[baseClass]!.add(subClass);
         } else {
-          print("  - No subclass found for: $fullClassName");
+          // Handle classes without a subclass, if any
           if (!classHierarchy.containsKey(fullClassName)) {
             classHierarchy[fullClassName] = [];
           }
@@ -60,11 +55,7 @@ class _ClassSelectionStepState extends State<ClassSelectionStep> {
       }
     }
 
-    print("Final class hierarchy: $classHierarchy");
-    print("Final class name to path map: $fullClassNameToPath");
-
     setState(() {
-      print("Calling setState with new class data.");
       _classHierarchy = classHierarchy;
       _fullClassNameToPath = fullClassNameToPath;
     });

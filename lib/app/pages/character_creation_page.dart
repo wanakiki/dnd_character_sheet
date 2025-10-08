@@ -1,3 +1,5 @@
+import 'creation_steps/attribute_editing_step.dart';
+import 'creation_steps/character_description_step.dart';
 import 'creation_steps/class_selection_step.dart';
 import 'package:flutter/material.dart';
 import 'creation_steps/race_selection_step.dart';
@@ -13,6 +15,11 @@ class _CharacterCreationPageState extends State<CharacterCreationPage> {
   int _currentStep = 0;
   String? _selectedRace;
   String? _selectedClass;
+  Map<String, int> _attributes = {};
+  String? _characterName;
+  int? _characterAge;
+  String? _selectedAlignment;
+  String? _selectedBackground;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +31,7 @@ class _CharacterCreationPageState extends State<CharacterCreationPage> {
         type: StepperType.horizontal,
         currentStep: _currentStep,
         onStepContinue: () {
-          if (_currentStep < 1) {
-            // We only have 1 step for now
+          if (_currentStep < 3) {
             setState(() {
               _currentStep += 1;
             });
@@ -61,7 +67,32 @@ class _CharacterCreationPageState extends State<CharacterCreationPage> {
             ),
             isActive: _currentStep >= 1,
           ),
-          // More steps will be added here
+          Step(
+            title: const Text('属性'),
+            content: AttributeEditingStep(
+              selectedRace: _selectedRace,
+              onAttributesChanged: (attributes) {
+                setState(() {
+                  _attributes = attributes;
+                });
+              },
+            ),
+            isActive: _currentStep >= 2,
+          ),
+          Step(
+            title: const Text('描述'),
+            content: CharacterDescriptionStep(
+              onDescriptionChanged: (name, age, alignment, background) {
+                setState(() {
+                  _characterName = name;
+                  _characterAge = age;
+                  _selectedAlignment = alignment;
+                  _selectedBackground = background;
+                });
+              },
+            ),
+            isActive: _currentStep >= 3,
+          ),
         ],
       ),
     );
